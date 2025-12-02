@@ -16,6 +16,7 @@ class _SelectableItemState extends State<SelectableItem> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+
       borderRadius: BorderRadius.circular(12),
       onTap: () {
         setState(() {
@@ -33,7 +34,9 @@ class _SelectableItemState extends State<SelectableItem> {
           Text(
             widget.label,
             style: AppTextStyle.descriptionText,
+
           ),
+          Spacer(),
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             width: 24,
@@ -41,7 +44,7 @@ class _SelectableItemState extends State<SelectableItem> {
             decoration: BoxDecoration(
               color: isSelected ? Colors.blue : Colors.transparent,
               border: Border.all(
-                color: isSelected ? Colors.blue : Colors.grey,
+                color: isSelected ?  Colors.blue : Colors.grey,
                 width: 2,
               ),
               borderRadius: BorderRadius.circular(6),

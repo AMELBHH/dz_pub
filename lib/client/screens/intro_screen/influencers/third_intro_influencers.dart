@@ -18,7 +18,7 @@ class ThirdIntroInfluencers extends StatelessWidget {
             description: 'حوّل متابعيك إلى دخل حقيقي من خلال الإعلانات الذكية.',
             text: 'ابدء الان',
             onPressed: () {
-              context.pushReplacementNamed(AppRoutes.influencersHomeScreen);
+              context.pushReplacementNamed(AppRoutes.homeScreen);
             },
           ),
         ),

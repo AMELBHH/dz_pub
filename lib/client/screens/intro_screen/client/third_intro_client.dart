@@ -18,7 +18,7 @@ class ThirdIntroClient extends StatelessWidget {
             description: '.شاهد منتجك يصل لجمهور واسع، ودع التأثير يبدأ',
             text: 'ابدء الان',
             onPressed: () {
-              context.pushReplacementNamed(AppRoutes.clientHomeScreen);
+              context.pushReplacementNamed(AppRoutes.homeScreen);
             },
           ),
         ),

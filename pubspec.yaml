@@ -39,6 +39,12 @@ dependencies:
   flutter_svg: ^2.2.1
   url_launcher: ^6.3.2
   shared_preferences: ^2.5.3
+  get_it: ^9.1.1
+  get: ^4.7.3
+  flutter_riverpod: ^3.0.3
+  http: ^1.2.2
+  image_picker: ^1.2.1
+  colorful_safe_area: ^1.0.0
   
 
 dev_dependencies:
@@ -67,6 +73,8 @@ flutter:
   assets:
     - assets/image/
     - assets/svg/
+    - assets/languages/en.json
+    - assets/languages/ar.json
  
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -9,8 +9,8 @@ class AppRoutes {
   static const secondIntroInfluencers = '/Second_Intro_Influencers';
   static const thirdIntroInfluencers = '/Third_Intro_Influencers';
 
-  static const clientHomeScreen = '/Client_Home_Screen';
-  static const influencersHomeScreen = '/influencers_home_screen';
+  static const homeScreen = '/Home_Screen';
+  //static const influencersHomeScreen = '/influencers_home_screen';
 
   static const listOfInfluencers = '/List_of_influencers';
   static const influencerProfileDetails = '/Influencer_Profile_Details';

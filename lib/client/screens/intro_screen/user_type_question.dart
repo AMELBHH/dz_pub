@@ -1,5 +1,7 @@
+import 'package:dz_pub/constants/strings.dart';
 import 'package:dz_pub/core/styling/App_text_style.dart';
 import 'package:dz_pub/routing/App_routes.dart';
+import 'package:dz_pub/session/new_session.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,9 +70,12 @@ class UserTypeQuestionScreen extends StatelessWidget {
                     description: 'أنشئ محتوى وتعاون مع العلامات التجارية',
                     color: Colors.deepPurpleAccent,
                     onTap: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      await prefs.setString('user_type', 'influencer');
+                    NewSession.save(PrefKeys.userType, 'influencer');
+                    debugPrint("type of user ${NewSession.get(PrefKeys
+                        .userType, "no user type selected")}");
+                      // SharedPreferences prefs =
+                      //     await SharedPreferences.getInstance();
+                      // await prefs.setString('user_type', 'influencer');
                       context.pushReplacementNamed(
                         AppRoutes.firstIntroInfluencers,
                       );
@@ -83,9 +88,12 @@ class UserTypeQuestionScreen extends StatelessWidget {
                     description: 'ابحث عن مؤثرين لحملاتك بسهولة',
                     color: Colors.blueAccent,
                     onTap: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      await prefs.setString('user_type', 'client');
+                      NewSession.save(PrefKeys.userType, 'client');
+
+
+                      // SharedPreferences prefs =
+                      //     await SharedPreferences.getInstance();
+                      // await prefs.setString('user_type', 'client');
                       context.pushReplacementNamed(AppRoutes.firstIntroClient);
                     },
                   ),
