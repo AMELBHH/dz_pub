@@ -1,4 +1,4 @@
-import 'package:dz_pub/controllers/auth/providers/color_provider.dart';
+import 'package:dz_pub/controllers/providers/color_provider.dart';
 import 'package:dz_pub/controllers/show_snack_bar_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';

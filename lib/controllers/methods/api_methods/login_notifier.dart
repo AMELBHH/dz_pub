@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:dz_pub/api/categories.dart';
 import 'package:dz_pub/api/social_media.dart';
-import 'package:dz_pub/controllers/auth/providers/auth_provider.dart';
+import 'package:dz_pub/controllers/providers/auth_provider.dart';
 import 'package:dz_pub/session/new_session.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,10 +17,10 @@ import '../../statuses/auth_state.dart';
 
 class LoginNotifier extends StateNotifier<AuthState> {
   LoginNotifier() : super(AuthState());
-  Future<List<SocialMediaLink>> getSocialMediaLinksOfInfluencer(
+  Future<List<SocialMediaLink>> _getSocialMediaLinksOfInfluencer(
       int influencerId,    { WidgetRef? ref}) async {
-    final url = Uri.parse("${ServerLocalhostEm
-        .socialMediaOfIn}?influencer_id=$influencerId");
+      final url = Uri.parse("${ServerLocalhostEm
+          .socialMediaOfIn}?influencer_id=$influencerId");
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -33,8 +33,9 @@ class LoginNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<List<Category>> getCategoriesOfInfluencer(
+  Future<List<Category>> _getCategoriesOfInfluencer(
       int influencerId,    { WidgetRef? ref}) async {
+    state = state.copyWith(isLoading: true);
     final url = Uri.parse("${ServerLocalhostEm
         .categoriesOfInf}?influencer_id=$influencerId");
 debugPrint(" url of caegories is :$url");
@@ -44,13 +45,21 @@ debugPrint(" url of caegories is :$url");
 
       final body = jsonDecode(response.body);
       debugPrint("categories of user ${body}");
+      state = state.copyWith(isLoading: false);
 
       return CategoryResponse.fromJson(body).categories??[];
     } else {
       throw Exception("Failed to load categories: ${response.statusCode}");
     }
   }
-
+Future<void> getCategoriesAndSocialMediaLinksOfInfluencer(int influencerId)async{
+    state = state.copyWith(isLoading: true);
+  await _getCategoriesOfInfluencer(influencerId);
+  await _getSocialMediaLinksOfInfluencer(influencerId);
+  state = state.copyWith(
+      isLoading: false,
+      categories: _getCategoriesOfInfluencer(influencerId),socialMediaLinks: _getSocialMediaLinksOfInfluencer(influencerId));
+}
   Future<User> login(String email, String password, WidgetRef ref,
       BuildContext context) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
@@ -81,23 +90,17 @@ debugPrint(" url of caegories is :$url");
         NewSession.save(PrefKeys.logged, "OK");
         debugPrint("NewSession of is have cr ${NewSession.get(PrefKeys.isHaveCr, "")}");
         if(user.influencer != null){
-          await getCategoriesOfInfluencer(NewSession.get
+          await _getCategoriesOfInfluencer(NewSession.get
             (PrefKeys.id, 0),ref:  ref);
           // await getSocialMediaLinksOfInfluencer(NewSession.get
           //   (PrefKeys.id, 0),ref:  ref);
-         await getSocialMediaLinksOfInfluencer(NewSession.get
+         await _getSocialMediaLinksOfInfluencer(NewSession.get
             (PrefKeys.id, 0),ref:  ref);
 
-
-
-
-
-
-
-          // ref.read(categoriesOfInfluencer.notifier).state =
-          //     getCategoriesOfInfluencer();
-        state = state.copyWith(categories: getCategoriesOfInfluencer(NewSession.get
-            (PrefKeys.id, 0),ref:  ref),socialMediaLinks: getSocialMediaLinksOfInfluencer(NewSession.get
+        state = state.copyWith(categories: _getCategoriesOfInfluencer
+          (NewSession.get
+            (PrefKeys.id, 0),ref:  ref),socialMediaLinks:
+        _getSocialMediaLinksOfInfluencer(NewSession.get
             (PrefKeys.id, 0),ref:  ref));
         debugPrint("state of categories ${state.categories}");
         debugPrint("here get Categories influencer method done !!!!!");

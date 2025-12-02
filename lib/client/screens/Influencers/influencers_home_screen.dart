@@ -11,12 +11,12 @@ class InfluencersHome  extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return InfluencerHomeButtons();
   }
 }
 
-class InfluencerHome extends StatelessWidget {
-  const InfluencerHome({super.key});
+class InfluencerHomeButtons extends StatelessWidget {
+  const InfluencerHomeButtons({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,5 @@
-import 'package:dz_pub/controllers/auth/methods/hybrid_methods/auth_validator/login_and_reg_validators/validator_and_login.dart';
-import 'package:dz_pub/controllers/auth/providers/auth_provider.dart';
+import 'package:dz_pub/controllers/methods/hybrid_methods/auth_validator/login_and_reg_validators/validator_and_login.dart';
+import 'package:dz_pub/controllers/providers/auth_provider.dart';
 import 'package:dz_pub/view/common_widgets/button_widgets/elevated_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

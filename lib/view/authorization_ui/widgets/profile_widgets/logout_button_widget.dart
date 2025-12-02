@@ -1,4 +1,4 @@
-import 'package:dz_pub/controllers/auth/providers/auth_provider.dart';
+import 'package:dz_pub/controllers/providers/auth_provider.dart';
   import 'package:dz_pub/view/common_widgets/button_widgets/outline_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' ;

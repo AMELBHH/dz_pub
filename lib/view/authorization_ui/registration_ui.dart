@@ -1,8 +1,8 @@
 import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:dz_pub/client/questions/widget/SelectableItem.dart';
 import 'package:dz_pub/constants/strings.dart';
-import 'package:dz_pub/controllers/auth/providers/auth_provider.dart';
-import 'package:dz_pub/controllers/auth/providers/color_provider.dart';
+import 'package:dz_pub/controllers/providers/auth_provider.dart';
+import 'package:dz_pub/controllers/providers/color_provider.dart';
 import 'package:dz_pub/session/new_session.dart';
 import 'package:dz_pub/view/common_widgets/button_widgets/back_button_widget.dart';
 import 'package:dz_pub/view/common_widgets/custom_dropdown_question_widget.dart';

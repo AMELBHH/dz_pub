@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dz_pub/controllers/auth/providers/auth_provider.dart';
+import 'package:dz_pub/controllers/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1,4 +1,4 @@
-import 'package:dz_pub/controllers/auth/statuses/validate_text_form_field_state.dart';
+import 'package:dz_pub/controllers/statuses/validate_text_form_field_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';

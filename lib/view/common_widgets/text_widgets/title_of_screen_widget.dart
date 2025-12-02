@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../constants/coordination.dart';
 import '../../../constants/get_it_controller.dart';
-import '../../../controllers/auth/providers/color_provider.dart';
+import '../../../controllers/providers/color_provider.dart';
 class TitleWidget extends ConsumerWidget {
   const TitleWidget({super.key,required this.title});
   final String title;

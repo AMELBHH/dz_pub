@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dz_pub/constants/strings.dart';
-import 'package:dz_pub/controllers/auth/providers/auth_provider.dart';
+import 'package:dz_pub/controllers/providers/auth_provider.dart';
 import 'package:dz_pub/session/new_session.dart';
 import 'package:dz_pub/view/common_widgets/containers_widgets/container_widget.dart';
 import 'package:dz_pub/view/common_widgets/text_widgets/title_text_widget.dart';
@@ -28,7 +28,7 @@ class _InfluencerProfileState extends ConsumerState<InfluencerProfile> {
       4: "يوتيوب",
       5: "تويتر",
     };
-    final influencerCategories = ref.watch(loginNotifier).categories;
+      final influencerCategories = ref.watch(loginNotifier).categories;
     final influencerSocialMediaLinks = ref.watch(loginNotifier).socialMediaLinks;
 
     final bio = NewSession.get(PrefKeys.inflBio, '');

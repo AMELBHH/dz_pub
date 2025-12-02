@@ -1,4 +1,4 @@
-import 'package:dz_pub/controllers/auth/methods/hybrid_methods/auth_validator/login_and_reg_validators/validator_and_registratoin.dart';
+import 'package:dz_pub/controllers/methods/hybrid_methods/auth_validator/login_and_reg_validators/validator_and_registratoin.dart';
 import 'package:dz_pub/view/common_widgets/button_widgets/elevated_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../constants/coordination.dart';
 import '../../../../constants/get_it_controller.dart';
 import '../../../../constants/strings.dart';
-import '../../../../controllers/auth/providers/auth_provider.dart';
+import '../../../../controllers/providers/auth_provider.dart';
 import '../../../../controllers/show_snack_bar_notifier.dart';
 import '../../../../session/new_session.dart';
 

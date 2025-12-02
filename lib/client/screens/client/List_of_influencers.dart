@@ -1,5 +1,7 @@
 
-import 'package:dz_pub/controllers/auth/providers/auth_provider.dart';
+import 'package:dz_pub/api/users.dart';
+import 'package:dz_pub/controllers/providers/auth_provider.dart';
+import 'package:dz_pub/controllers/providers/influencer_provider.dart';
 import 'package:dz_pub/core/styling/App_colors.dart';
 import 'package:dz_pub/core/styling/App_font.dart';
 import 'package:dz_pub/core/styling/App_text_style.dart';
@@ -10,48 +12,56 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class ListOfInfluencers extends StatelessWidget {
+class ListOfInfluencers extends ConsumerStatefulWidget {
   const ListOfInfluencers({super.key});
 
+  @override
+  ConsumerState createState() => _ListOfInfluencersState();
+}
+
+class _ListOfInfluencersState extends ConsumerState<ListOfInfluencers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('قائمة المؤثرين'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.search, color: AppColors.witheColor),
-          ),
-        ],
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(150),
+          title: ref.read(categorySelectableName) != ''?
+          Text("قائمة المؤثرين في مجال: ${ref.watch(categorySelectableName)}"):
+          Text('قائمة المؤثرين'),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.search, color: AppColors.witheColor),
         ),
-        onPressed: () {},
-        child: Icon(Icons.filter_alt_outlined, color: AppColors.premrayColor),
-      ),
+      ],
+    ),
 
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child:
-ListOfInfluencersWidget()
-        // ListView(
-        //   children: [
-        //     CardOfInfuencersWidget(
-        //       details: () {
-        //         context.pushNamed(AppRoutes.influencerProfileDetails);
-        //       },
-        //     ),
-        //     CardOfInfuencers(details: () {}),
-        //     CardOfInfuencers(details: () {}),
-        //   ],
-        // ),
-      ),
+    floatingActionButton: FloatingActionButton(
+    shape: RoundedRectangleBorder(
+    borderRadius: BorderRadiusGeometry.circular(150),
+    ),
+    onPressed: () {},
+    child: Icon(Icons.filter_alt_outlined, color: AppColors.premrayColor),
+    ),
+
+    body: Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 10),
+    child:
+    ListOfInfluencersWidget()
+    // ListView(
+    //   children: [
+    //     CardOfInfuencersWidget(
+    //       details: () {
+    //         context.pushNamed(AppRoutes.influencerProfileDetails);
+    //       },
+    //     ),
+    //     CardOfInfuencers(details: () {}),
+    //     CardOfInfuencers(details: () {}),
+    //   ],
+    // ),
+    ),
     );
   }
+
 }
 
 // class CardOfInfuencers extends StatefulWidget {
@@ -201,19 +211,17 @@ class _ListOfInfluencersWidgetState
 }
 
 class CardOfInfluencersWidget extends ConsumerStatefulWidget {
-  const CardOfInfluencersWidget( {super.key, required this.details, this
-      .imageUrl,
-    this.name, this.categories});
+  const CardOfInfluencersWidget( {super.key, required this.details,
+   this.influencer,
+  });
+  final User? influencer;
   final Function()details;
-  final String ?imageUrl;
-  final String ?name;
-  final List<String> ?categories;
+
 
 
   @override
   ConsumerState createState() => _CardOfInfluencersWidgetState();
 }
-
 class _CardOfInfluencersWidgetState
     extends ConsumerState<CardOfInfluencersWidget> {
 
@@ -222,101 +230,117 @@ class _CardOfInfluencersWidgetState
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
+
+    final name =  widget.influencer?.name?? "بدون اسم";
+    final categories = widget.influencer?.influencer?.categories ?? [];
+
     return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10),
       color: Colors.purple[40],
       shadowColor: AppColors.premrayColor,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ClipOval(
-                child: Image.network(
-                  widget.imageUrl??ref.read(defaultImage),
-                  height: height * 0.10,
-                  width: height * 0.10,
-                  fit: BoxFit.cover,
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                /// Avatar
+                ClipOval(
+                  child: Image.network(
+                    ref.read(defaultImage),
+                    height: height * 0.10,
+                    width: height * 0.10,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Icon(
+                      Icons.person,
+                      size: height * 0.10,
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
-              ),
-              Column(
-                children: [
-                  Text(
-                    widget.name??'Numidia Lezoul',
-                    style: TextStyle(
-                      fontSize: width * 0.06,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: AppFont.mainFontName,
-                      color: AppColors.blackColor,
-                    ),
-                  ),
-                  Text(
-                    'الاوسمة :سفير المنصة لمجال الفن سنة 2024',
-                    style: TextStyle(
-                      fontSize: width * 0.03,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: AppFont.mainFontName,
-                      color: AppColors.blackColor,
-                    ),
-                  ),
-                  if(widget.categories != null)
-                    Text(
-                      widget.categories!.join(', '),
-                      style: TextStyle(
-                        fontSize: width * 0.036,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: AppFont.mainFontName,
-                        color: AppColors.blackColor,
+
+                const SizedBox(width: 14),
+
+                /// Name + info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                      /// Name
+                      Text(
+                        name,
+                        style: TextStyle(
+                          fontSize: width * 0.05,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: AppFont.mainFontName,
+                        ),
                       ),
-                    ),
 
-                  Text(
-                    'الغناء ,التمثيل ,الموضة',
-                    style: TextStyle(
-                      fontSize: width * 0.036,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: AppFont.mainFontName,
-                      color: AppColors.blackColor,
-                    ),
+                      const SizedBox(height: 4),
+
+                      /// Categories (dynamic)
+                      if (categories.isNotEmpty)
+                        Text(
+                          categories.join(', '),
+                          style: TextStyle(
+                            fontSize: width * 0.035,
+                            fontFamily: AppFont.mainFontName,
+                            color: Colors.black87,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+
+                      const SizedBox(height: 6),
+
+                      /// Example badges or description
+                      Text(
+                        'الاوسمة : سفير المنصة لمجال الفن سنة 2024',
+                        style: TextStyle(
+                          fontSize: width * 0.03,
+                          fontFamily: AppFont.mainFontName,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ],
                   ),
+                ),
+              ],
+            ),
 
+            const SizedBox(height: 15),
 
-
-                ],
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 90),
-            child: CustomButtonWidget(
+            /// Details Button
+            CustomButtonWidget(
               colorButton: AppColors.premrayColor,
-              onPressd:
-
-
-              widget.details,
+              onPressd: widget.details,
               textStyle: AppTextStyle.textStyle,
               textButton: 'تفاصيل',
-              heigth: height * 0.03,
-
+              heigth: height * 0.045,
+              width: width * 0.55,
               radius: 8,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 90),
-            child: CustomButtonWidget(
+
+            const SizedBox(height: 10),
+
+            /// Start Promotion Button
+            CustomButtonWidget(
               colorButton: AppColors.premrayColor,
               onPressd: () {
                 context.pushNamed(AppRoutes.dynamicQuestionScreen);
               },
               textStyle: AppTextStyle.textStyle,
               textButton: 'ابدء اشهارك الان',
-              heigth: height * 0.03,
+              heigth: height * 0.045,
               width: width * 0.55,
               radius: 8,
             ),
-          ),
-
-
-        ],
+          ],
+        ),
       ),
     );
   }

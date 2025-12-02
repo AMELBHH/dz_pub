@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../controllers/auth/providers/color_provider.dart';
+import '../../../controllers/providers/color_provider.dart';
 
 class TextFormFieldWidget extends ConsumerWidget {
   final String? labelName;

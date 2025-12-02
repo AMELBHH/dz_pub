@@ -1,5 +1,5 @@
 
-import 'package:dz_pub/controllers/auth/providers/color_provider.dart';
+import 'package:dz_pub/controllers/providers/color_provider.dart';
 import 'package:dz_pub/view/authorization_ui/widgets/profile_widgets/defult_profile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

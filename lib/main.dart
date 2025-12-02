@@ -20,7 +20,7 @@ void main()async  {
 
   await NewSession.init();
   await configureInjection();
-  NewSession.save(PrefKeys.userType, 'client');
+  //NewSession.save(PrefKeys.userType, 'client');
   //removeUserInfo();
 debugPrint("NewSession.userType ${NewSession.get(PrefKeys.userType, '')}");
   runApp(ProviderScope(

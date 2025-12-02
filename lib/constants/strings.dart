@@ -22,7 +22,9 @@ class ServerLocalDiv {
 //Localhost for Emulator
 class   ServerLocalhostEm {
   static String server = "http://192.168.2.4:8000/api/";
-
+  static String seedGet = "${server}seed/get/";
+    static String getInfluencersByCategory = "${seedGet}influencer-category";
+  static String getCategories = "${seedGet}category";
   // static String postAll = "${server}post/all";
   static String socialMediaOfIn = "${server}get-social-media-links-by-influencer";
   static String categoriesOfInf = "${server}get-categories-by-influencer";

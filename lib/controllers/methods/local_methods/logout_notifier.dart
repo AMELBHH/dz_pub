@@ -1,4 +1,4 @@
-import 'package:dz_pub/controllers/auth/statuses/auth_state.dart';
+import 'package:dz_pub/controllers/statuses/auth_state.dart';
 import 'package:dz_pub/session/sesstion_of_user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/legacy.dart';

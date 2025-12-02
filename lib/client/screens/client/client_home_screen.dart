@@ -1,6 +1,7 @@
 import 'package:dz_pub/client/screens/Influencers/influencers_home_screen.dart';
 import 'package:dz_pub/constants/strings.dart';
-import 'package:dz_pub/controllers/auth/providers/auth_provider.dart';
+import 'package:dz_pub/controllers/providers/auth_provider.dart';
+import 'package:dz_pub/controllers/providers/influencer_provider.dart';
 import 'package:dz_pub/core/styling/App_colors.dart';
 
 import 'package:dz_pub/core/styling/App_text_style.dart';
@@ -37,10 +38,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           // backgroundColor: Colors.amber[600],
           bottom: TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.home, color: AppColors.witheColor)),
-              Tab(icon: Icon(Icons.person, color: AppColors.witheColor)),
+              const Tab(icon: Icon(Icons.home)),
+              const Tab(icon: Icon(Icons.person)),
             ],
-          ),
+            onTap: (index) async {
+              if (index == 1) {
+                if(NewSession.get(PrefKeys.userTypeId, 1) == 2){
+                if (ref.read(loginNotifier).categories == null ||
+                    ref.read(loginNotifier).socialMediaLinks == null) {
+                  await ref.read(loginNotifier.notifier).getCategoriesAndSocialMediaLinksOfInfluencer(
+                    NewSession.get(PrefKeys.id, 0),
+                  );
+                }
+              }
+              }
+            },
+          )
+          ,
         ),
         body: TabBarView(
           children: [
@@ -48,7 +62,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child:
-              NewSession.get(PrefKeys.userType, 'client') == 'client' ?
+          NewSession.get(PrefKeys.userType, 'client') == 'client' ?
               ClientHome(): InfluencersHome(),
             ),
             //profile
@@ -87,11 +101,12 @@ class _HandelProfileAndLoginUIState
   }
 }
 
-class ClientHome extends StatelessWidget {
+class ClientHome extends ConsumerWidget {
   const ClientHome({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
@@ -113,6 +128,7 @@ class ClientHome extends StatelessWidget {
         CustomButtonWidget(
           colorButton: AppColors.premrayColor,
           onPressd: () {
+
             context.pushNamed(AppRoutes.listOfInfluencersByNiche);
           },
           textButton: 'قائمة المؤثرين حسب المجال',
@@ -173,4 +189,6 @@ class ClientHome extends StatelessWidget {
       ],
     );
   }
+
+
 }

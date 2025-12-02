@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:dz_pub/controllers/auth/methods/api_methods/refresh_user_data_notifier.dart';
-import 'package:dz_pub/controllers/auth/methods/api_methods/register_notifier.dart';
-import 'package:dz_pub/controllers/auth/methods/hybrid_methods/drop_down_notifier.dart';
-import 'package:dz_pub/controllers/auth/statuses/auth_state.dart';
-import 'package:dz_pub/controllers/auth/statuses/validate_text_form_field_state.dart';
+import 'package:dz_pub/controllers/methods/api_methods/refresh_user_data_notifier.dart';
+import 'package:dz_pub/controllers/methods/api_methods/register_notifier.dart';
+import 'package:dz_pub/controllers/methods/hybrid_methods/drop_down_notifier.dart';
+import 'package:dz_pub/controllers/statuses/auth_state.dart';
+import 'package:dz_pub/controllers/statuses/validate_text_form_field_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:image_picker/image_picker.dart';
