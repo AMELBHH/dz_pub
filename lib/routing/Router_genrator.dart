@@ -8,6 +8,7 @@ import 'package:dz_pub/client/screens/client/List_of_influencers.dart';
 import 'package:dz_pub/client/screens/client/List_of_influencers_by_niche.dart';
 import 'package:dz_pub/client/screens/client/Platform_services.dart';
 import 'package:dz_pub/client/screens/client/client_home_screen.dart';
+import 'package:dz_pub/client/screens/client/list_of_client_promotions.dart';
 import 'package:dz_pub/client/screens/intro_screen/client/first_intro_client.dart';
 import 'package:dz_pub/client/screens/intro_screen/client/second_intro_client.dart';
 import 'package:dz_pub/client/screens/intro_screen/client/third_intro_client.dart';
@@ -93,7 +94,7 @@ class RouterGenrator {
       GoRoute(
         name: AppRoutes.dynamicQuestionScreen,
         path: AppRoutes.dynamicQuestionScreen,
-        builder: (context, state) => DynamicQuestionScreen(),
+          builder: (context, state) => DynamicQuestionScreen(),
       ),
 
       GoRoute(
@@ -110,6 +111,16 @@ class RouterGenrator {
         path: AppRoutes.customPromotion,
         name: AppRoutes.customPromotion,
         builder: (context, state) => CustomPromotion(),
+      ),
+      GoRoute(
+        name: AppRoutes.promotionDetails,
+        path: AppRoutes.promotionDetails,
+        builder: (context, state) => const PromotionDetailsScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.listOfClientPromotions,
+        path: AppRoutes.listOfClientPromotions,
+        builder: (context, state) => const ListOfClientPromotions(),
       ),
       GoRoute(
         path: AppRoutes.platformServices,

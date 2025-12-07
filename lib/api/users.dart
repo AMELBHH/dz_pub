@@ -147,23 +147,24 @@ class   UserInfo {
     "created_at": createdAt,
     "updated_at": updatedAt,
   };
-}
-class Client {
-  int ?id;
-  String ?isHaveCr;
+}class Client {
+  int? id;
+  String? isHaveCr;
   String? createdAt;
   String? updatedAt;
 
+  UserMini? user;               // <<-- added, non-destructive
   ClientWithCr? clientWithCr;
   ClientWithoutCr? clientWithoutCr;
 
   Client({
-     this.id,
-     this.isHaveCr,
+    this.id,
+    this.isHaveCr,
     this.createdAt,
     this.updatedAt,
     this.clientWithCr,
     this.clientWithoutCr,
+    this.user,
   });
 
   Client.fromJson(Map<String, dynamic> json)
@@ -172,11 +173,12 @@ class Client {
         createdAt = json['created_at'],
         updatedAt = json['updated_at'],
         clientWithCr = json['client_with_cr'] != null
-            ? ClientWithCr?.fromJson(json['client_with_cr'])
+            ? ClientWithCr.fromJson(json['client_with_cr'])
             : null,
         clientWithoutCr = json['client_without_cr'] != null
-            ? ClientWithoutCr?.fromJson(json['client_without_cr'])
-            : null;
+            ? ClientWithoutCr.fromJson(json['client_without_cr'])
+            : null,
+        user = json['user'] != null ? UserMini.fromJson(json['user']) : null;
 
   Map<String, dynamic> toJson() => {
     "id": id,
@@ -185,8 +187,10 @@ class Client {
     "updated_at": updatedAt,
     "client_with_cr": clientWithCr?.toJson(),
     "client_without_cr": clientWithoutCr?.toJson(),
+    "user": user?.toJson(),
   };
 }
+
 class ClientWithoutCr {
   int ?clientId;
   String ?nickname;
@@ -280,7 +284,7 @@ class Influencer {
   final String? shakeNumber;
   final int? typeId;
 
-
+  UserMini? user; // <<-- added, non-destructive
 
   final List<SocialMediaLink>? socialMediaLinks;
   final List<Category>? categories;
@@ -292,6 +296,7 @@ class Influencer {
     this.dateOfBirth,
     this.shakeNumber,
     this.typeId,
+    this.user,
     this.socialMediaLinks = const [],
     this.categories = const [],
   });
@@ -307,16 +312,17 @@ class Influencer {
       shakeNumber: json['shake_number'],
       typeId: json['type_id'],
 
-      // NEW
+      user: json['user'] != null ? UserMini.fromJson(json['user']) : null,
+
       socialMediaLinks: json['social_media_links'] != null
           ? (json['social_media_links'] as List)
-          .map((e) => SocialMediaLink?.fromJson(e))
+          .map((e) => SocialMediaLink.fromJson(e))
           .toList()
           : [],
 
       categories: json['categories'] != null
           ? (json['categories'] as List)
-          .map((e) => Category?.fromJson(e))
+          .map((e) => Category.fromJson(e))
           .toList()
           : [],
     );
@@ -330,8 +336,7 @@ class Influencer {
       'date_of_birth': dateOfBirth,
       'shake_number': shakeNumber,
       'type_id': typeId,
-
-      // NEW
+      'user': user?.toJson(),
       'social_media_links':
       socialMediaLinks?.map((e) => e.toJson()).toList(),
       'categories': categories?.map((e) => e.toJson()).toList(),
@@ -339,3 +344,36 @@ class Influencer {
   }
 }
 
+class UserMini {
+  int? id;
+  String? name;
+  String? email;
+  int? typeId;
+  int? isActive;
+
+  UserMini({
+    this.id,
+    this.name,
+    this.email,
+    this.typeId,
+    this.isActive,
+  });
+
+  factory UserMini.fromJson(Map<String, dynamic> json) {
+    return UserMini(
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+      typeId: json['type_id'],
+      isActive: json['is_active'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "email": email,
+    "type_id": typeId,
+    "is_active": isActive,
+  };
+}

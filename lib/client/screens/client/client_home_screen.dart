@@ -28,6 +28,15 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ref.read(categorySelectableName.notifier).state = '';
+      ref.read(categorySelectedId.notifier).state = 0;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
@@ -60,9 +69,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: [
             //home
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const  EdgeInsets.symmetric(horizontal: 20),
               child:
-          NewSession.get(PrefKeys.userType, 'client') == 'client' ?
+          ref.watch(userTypeProvider.notifier).state == "client" ?
               ClientHome(): InfluencersHome(),
             ),
             //profile
@@ -110,83 +119,95 @@ class ClientHome extends ConsumerWidget {
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CustomButtonWidget(
-          colorButton: AppColors.premrayColor,
-          onPressd: () {
-            context.pushNamed(AppRoutes.listOfInfluencers);
-          },
-          textButton: 'قائمة المؤثرين',
-          textStyle: AppTextStyle.homebuttonStyle,
-          heigth: height * 0.07,
-          width: width * 0.9,
-          radius: 180,
-        ),
-        SizedBox(height: height * 0.015),
-        CustomButtonWidget(
-          colorButton: AppColors.premrayColor,
-          onPressd: () {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: height * .15),
 
-            context.pushNamed(AppRoutes.listOfInfluencersByNiche);
-          },
-          textButton: 'قائمة المؤثرين حسب المجال',
-          textStyle: AppTextStyle.homebuttonStyle,
-          heigth: height * 0.07,
-          width: width * 0.9,
-          radius: 180,
-        ),
-        SizedBox(height: height * 0.015),
-        CustomButtonWidget(
-          colorButton: AppColors.premrayColor,
-          onPressd: () {
-            context.pushNamed(AppRoutes.customPromotion);
-          },
-          textButton: 'ترويج حسب الطلب',
-          textStyle: AppTextStyle.homebuttonStyle,
-          heigth: height * 0.07,
-          width: width * 0.9,
-          radius: 180,
-        ),
-        SizedBox(height: height * 0.015),
-        CustomButtonWidget(
-          colorButton: AppColors.premrayColor,
-          onPressd: () {},
-          textButton: 'اشهاراتي',
-          textStyle: AppTextStyle.homebuttonStyle,
-          heigth: height * 0.07,
-          width: width * 0.9,
-          radius: 180,
-        ),
-        SizedBox(height: height * 0.015),
-        CustomButtonWidget(
-          colorButton: AppColors.premrayColor,
-          onPressd: () {
-            context.pushNamed(AppRoutes.platformServices);
-          },
-          textButton: 'خدمات المنصة الاحترافية',
-          textStyle: AppTextStyle.homebuttonStyle,
-          heigth: height * 0.07,
-          width: width * 0.9,
-          radius: 180,
-        ),
-        SizedBox(height: height * 0.015),
-        CustomButtonWidget(
-          colorButton: AppColors.premrayColor,
-          onPressd: () {
-            GoRouter.of(context).go(AppRoutes.userTypeQuestionScreen);
-            removeUserInfo();
-          },
-          textButton: 'تبديل الحساب',
-          textStyle: AppTextStyle.homebuttonStyle,
-          heigth: height * 0.07,
-          width: width * 0.9,
-          radius: 180,
-        ),
-        SizedBox(height: height * 0.015),
+          CustomButtonWidget(
+            colorButton: AppColors.premrayColor,
+            onPressd: () {
 
-      ],
+
+             // debugPrint("categorySelectedId ")
+              context.pushNamed(AppRoutes.listOfInfluencers);
+            },
+            textButton: 'قائمة المؤثرين',
+            textStyle: AppTextStyle.homebuttonStyle,
+            heigth: height * 0.07,
+            width: width * 0.9,
+            radius: 180,
+          ),
+          SizedBox(height: height * 0.015),
+          CustomButtonWidget(
+            colorButton: AppColors.premrayColor,
+            onPressd: () {
+
+              context.pushNamed(AppRoutes.listOfInfluencersByNiche);
+            },
+            textButton: 'قائمة المؤثرين حسب المجال',
+            textStyle: AppTextStyle.homebuttonStyle,
+            heigth: height * 0.07,
+            width: width * 0.9,
+            radius: 180,
+          ),
+          SizedBox(height: height * 0.015),
+          CustomButtonWidget(
+            colorButton: AppColors.premrayColor,
+            onPressd: () {
+              context.pushNamed(AppRoutes.customPromotion);
+            },
+            textButton: 'ترويج حسب الطلب',
+            textStyle: AppTextStyle.homebuttonStyle,
+            heigth: height * 0.07,
+            width: width * 0.9,
+            radius: 180,
+          ),
+          SizedBox(height: height * 0.015),
+          CustomButtonWidget(
+              colorButton: AppColors.premrayColor,
+            onPressd: () {
+
+              debugPrint("here is life of promation of cliet!!!");
+              context.pushNamed(AppRoutes.listOfClientPromotions);
+              debugPrint("listOfClientPromotions");
+            },
+            textButton: 'اشهاراتي',
+            textStyle: AppTextStyle.homebuttonStyle,
+            heigth: height * 0.07,
+            width: width * 0.9,
+            radius: 180,
+          ),
+          SizedBox(height: height * 0.015),
+          CustomButtonWidget(
+            colorButton: AppColors.premrayColor,
+            onPressd: () {
+
+            },
+            textButton: 'خدمات المنصة الاحترافية',
+            textStyle: AppTextStyle.homebuttonStyle,
+            heigth: height * 0.07,
+            width: width * 0.9,
+            radius: 180,
+          ),
+          SizedBox(height: height * 0.015),
+          CustomButtonWidget(
+            colorButton: AppColors.premrayColor,
+            onPressd: () {
+              GoRouter.of(context).go(AppRoutes.userTypeQuestionScreen);
+              removeUserInfo();
+            },
+            textButton: 'تبديل الحساب',
+            textStyle: AppTextStyle.homebuttonStyle,
+            heigth: height * 0.07,
+            width: width * 0.9,
+            radius: 180,
+          ),
+          SizedBox(height: height * 0.015),
+
+        ],
+      ),
     );
   }
 

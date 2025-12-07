@@ -1,46 +1,80 @@
+import 'package:dz_pub/api/users.dart';
 import 'package:dz_pub/core/styling/App_colors.dart';
+import 'package:dz_pub/view/authorization_ui/widgets/profile_widgets/defult_profile_image.dart';
+import 'package:intl/intl.dart' as intl;
 
 import 'package:dz_pub/core/styling/App_text_style.dart';
 import 'package:dz_pub/routing/App_routes.dart';
 import 'package:dz_pub/widget/Custom_Button_Widget.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class InfluencerProfileDetails extends StatelessWidget {
-  const InfluencerProfileDetails({super.key});
+class InfluencerProfileDetails extends ConsumerStatefulWidget {
+  const InfluencerProfileDetails({super.key, this.influencer});
+final User ?influencer;
+  @override
+  ConsumerState createState() => _InfluencerProfileDetailsState();
+}
 
+class _InfluencerProfileDetailsState
+    extends ConsumerState<InfluencerProfileDetails> {
+  String buildStars(double rating) {
+    int count = rating.toInt();       // convert double → int
+    return rating == 0 ? "لا يوجد تقييمات": '⭐' * count;               //
+    // repeat the star emoji
+  }
+@override
+  void initState() {
+    super.initState();
+    debugPrint("social mideia link : ${widget.influencer?.influencer?.socialMediaLinks}");
+  }
   @override
   Widget build(BuildContext context) {
+    final createdAtString = widget.influencer?.createdAt?? "";
+    String formattedCreatedAt = '';
+    if (createdAtString.isNotEmpty) {
+      try {
+        // Parse the string into a DateTime object
+        final createdAt = DateTime.parse(createdAtString);
+
+        // Format it into a human-friendly format, e.g., "Nov 30, 2025 at 4:30 PM"
+        final formatter = intl.DateFormat('MMM d, yyyy');
+        formattedCreatedAt = formatter.format(createdAt);
+      } catch (e) {
+        formattedCreatedAt = createdAtString; // fallback if parsing fails
+      }
+    }
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(title: Text('ابدء اشهارك الان'),
-        actions: [
-           PopupMenuButton<String>(
-            icon: const Icon(Icons.menu),
-            onSelected: (value) {},
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem<String>(
-                  value: 'block',
-                  child: Text(' حظر',style: AppTextStyle.descriptionText),
-                ),
-                PopupMenuItem<String>(
-                  value: 'report',
-                  child: Text(' إبلاغ',style: AppTextStyle.descriptionText),
-                ),
-              ];
-            },
-          ),
-        ],
-      ),
-       
-        
+          actions: [
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.menu),
+              onSelected: (value) {},
+              itemBuilder: (BuildContext context) {
+                return [
+                  PopupMenuItem<String>(
+                    value: 'block',
+                    child: Text(' حظر',style: AppTextStyle.descriptionText),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'report',
+                    child: Text(' إبلاغ',style: AppTextStyle.descriptionText),
+                  ),
+                ];
+              },
+            ),
+          ],
+        ),
+
+
         body: SingleChildScrollView(
           child: Stack(
             children: [
@@ -49,34 +83,34 @@ class InfluencerProfileDetails extends StatelessWidget {
                   SizedBox(height: height * 0.23),
                   Center(
                     child: Text(
-                      'Numidia Lezoul',
+                      widget.influencer?.name?? "بدون اسم",
                       style: AppTextStyle.premaryLineStyle,
                     ),
                   ),
                   SizedBox(height: height * 0.02),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        children: [
-                          Text('49k', style: AppTextStyle.textpurpal),
-                          Text('المتابعون', style: AppTextStyle.titel),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text('49k', style: AppTextStyle.textpurpal),
-                          Text('الاعمال', style: AppTextStyle.titel),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text('49k', style: AppTextStyle.textpurpal),
-                          Text('المتابعون', style: AppTextStyle.titel),
-                        ],
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //   children: [
+                  //     Column(
+                  //       children: [
+                  //         Text('49k', style: AppTextStyle.textpurpal),
+                  //         Text('المتابعون', style: AppTextStyle.titel),
+                  //       ],
+                  //     ),
+                  //     Column(
+                  //       children: [
+                  //         Text('49k', style: AppTextStyle.textpurpal),
+                  //         Text('الاعمال', style: AppTextStyle.titel),
+                  //       ],
+                  //     ),
+                  //     Column(
+                  //       children: [
+                  //         Text('49k', style: AppTextStyle.textpurpal),
+                  //         Text('المتابعون', style: AppTextStyle.titel),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: height * 0.03),
 
                   Container(
@@ -97,32 +131,39 @@ class InfluencerProfileDetails extends StatelessWidget {
                     child: Column(
                       children: [
                         RowWidet(
-                          description: "سفير المنصة لمجال الفن سنة 2024",
+                          description:"لا يوجد أوسمة",
+                          //"سفير المنصة لمجال الفن سنة 2024",
                           title: 'الاوسمة :',
                         ),
                         SizedBox(height: height * 0.015),
                         RowWidet(
-                          description: '2024/05/09',
+                          description: formattedCreatedAt,
                           title: 'تاريخ الانضمام :',
                         ),
                         SizedBox(height: height * 0.015),
-                        // RowWidet(description: '⭐⭐⭐⭐', title: 'تقييم :'),
+                        RowWidet(
+                            description:
+
+                            buildStars(widget.influencer?.influencer?.rating ?? 0),
+                          title: 'تقييم :'),
+                        // RowWidet(description: '⭐⭐⭐', title: 'تقييم :'),
+                         SizedBox(height: height * 0.015),
+                        RowWidet(
+                          description: widget.influencer?.influencer?.categories?.map((c) => c.name).join(", ")?? "",
+                          title: 'المجالات:',
+                        ),
                         // SizedBox(height: height * 0.015),
-                        RowWidet(
-                          description: 'الغناء ,التمثيل ,الموضة',
-                          title: 'المجالات الرئسية:',
-                        ),
-                        SizedBox(height: height * 0.015),
-                        RowWidet(
-                          description: 'الغناء ,التمثيل ,الموضة',
-                          title: 'المجالات الثانوية :',
-                        ),
+                        // RowWidet(
+                        //   description: 'الغناء ,التمثيل ,الموضة',
+                        //   title: 'المجالات الثانوية :',
+                        // ),
                         SizedBox(height: height * 0.015),
                       ],
                     ),
                   ),
                   SizedBox(height: height * 0.02),
                   Container(
+                    width: double.infinity,
                     padding: EdgeInsets.all(18),
 
                     margin: EdgeInsets.symmetric(horizontal: 12),
@@ -140,12 +181,12 @@ class InfluencerProfileDetails extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          'نبذة عن Numidia Lezoul :',
+                          "نبذة عن :${widget.influencer?.name??''}",
                           style: AppTextStyle.titel,
                         ),
                         SizedBox(height: height * 0.015),
                         Text(
-                          'بدأت مسيرتها من خلال برنامج المواهب ألحان وشباب، ما فتح أمامها أبواب التمثيل والإعلام. كما درست الموسيقى والتراث الأندلسي لمدة 8 سنوات، وهو ما منحها قاعدة فنية قوية',
+                          widget.influencer?.influencer?.bio?? "",
                           style: AppTextStyle.descriptionText,
                         ),
                       ],
@@ -153,6 +194,7 @@ class InfluencerProfileDetails extends StatelessWidget {
                   ),
                   SizedBox(height: height * 0.02),
                   Container(
+                    width: double.infinity,
                     padding: EdgeInsets.all(18),
 
                     margin: EdgeInsets.symmetric(horizontal: 12),
@@ -171,80 +213,45 @@ class InfluencerProfileDetails extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          ' Numidia Lezoul :حسابات ',
+                          " حسابات: ${widget.influencer?.name??''}",
                           style: AppTextStyle.titel,
                         ),
-                        ListTile(
-                          leading: SvgPicture.asset(
-                            'assets/svg/facebook-svgrepo-com.svg',
-                            height: height * 0.035,
-                            width: width * 0.35,
-                          ), // أيقونة على اليسار
-                          title: Text(
-                            'نبذة عن Numidia Lezoul :',
-                            style: AppTextStyle.descriptionText,
-                          ),
-                          onTap: () {
-                            launchUrl(
-                              Uri.parse(
-                                'https://www.facebook.com/numidialezoul',
-                              ),
+
+                        Column(
+                          children:
+
+
+                          widget.influencer?.influencer?.socialMediaLinks
+                              ?.map((social) {
+
+
+
+                            return
+                              buildSocialTile(
+
+                              id: social.socialMediaId??0, // safe because we
+                                // checked
+                              // above
+                              url: social.url??"no soical",
+
+                              name: widget.influencer?.name ?? 'any thing',
                             );
-                          },
-                        ),
-                        ListTile(
-                          leading: SvgPicture.asset(
-                            'assets/svg/instagram-1-svgrepo-com.svg',
-                            height: height * 0.035,
-                            width: width * 0.35,
-                          ), // أيقونة على اليسار
-                          title: Text(
-                            'نبذة عن Numidia Lezoul :',
-                            style: AppTextStyle.descriptionText,
-                          ),
-                        ),
-                        ListTile(
-                          leading: SvgPicture.asset(
-                            'assets/svg/tiktok-logo-logo-svgrepo-com.svg',
-                            height: height * 0.035,
-                            width: width * 0.35,
-                          ), // أيقونة على اليسار
-                          title: Text(
-                            'نبذة عن Numidia Lezoul :',
-                            style: AppTextStyle.descriptionText,
-                          ),
-                        ),
-                        ListTile(
-                          leading: SvgPicture.asset(
-                            'assets/svg/twitter-svgrepo-com.svg',
-                            height: height * 0.035,
-                            width: width * 0.35,
-                          ), // أيقونة على اليسار
-                          title: Text(
-                            'نبذة عن Numidia Lezoul :',
-                            style: AppTextStyle.descriptionText,
-                          ),
-                        ),
-                        ListTile(
-                          leading: SvgPicture.asset(
-                            'assets/svg/youtube-svgrepo-com.svg',
-                            height: height * 0.035,
-                            width: width * 0.35,
-                          ), // أيقونة على اليسار
-                          title: Text(
-                            'نبذة عن Numidia Lezoul :',
-                            style: AppTextStyle.descriptionText,
-                          ),
-                        ),
-                        
+                          }).toList() ??
+                              [
+                                const SizedBox(
+                                  child: Text("no social"),
+                                ),
+                              ],
+                        )
+
                       ],
                     ),
-                  
+
                   ),
 
 
 
-                   SizedBox(height: height * 0.02),
+                  SizedBox(height: height * 0.02),
                   Container(
                     padding: EdgeInsets.all(18),
 
@@ -279,23 +286,23 @@ class InfluencerProfileDetails extends StatelessWidget {
 
 
 
-                 SizedBox(height: height * 0.02),
-                   Padding(
-                     padding: const EdgeInsets.all(10.0),
-                     child: CustomButtonWidget(
-                               colorButton: AppColors.premrayColor,
-                               onPressd: () {
-                                 context.pushNamed(AppRoutes.dynamicQuestionScreen);
-                               },
-                               textButton: 'ابدء اشهارك الان',
-                               textStyle: AppTextStyle.homebuttonStyle,
-                               
-                             heigth: height*0.06,
-                            // width: width*0.5,
-                               radius: 180,
-                             ),
-                   ),
-                
+                  SizedBox(height: height * 0.02),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: CustomButtonWidget(
+                      colorButton: AppColors.premrayColor,
+                      onPressd: () {
+                        context.pushNamed(AppRoutes.dynamicQuestionScreen);
+                      },
+                      textButton: 'ابدء اشهارك الان',
+                      textStyle: AppTextStyle.homebuttonStyle,
+
+                      heigth: height*0.06,
+                      // width: width*0.5,
+                      radius: 180,
+                    ),
+                  ),
+
                 ],
               ),
 
@@ -326,14 +333,18 @@ class InfluencerProfileDetails extends StatelessWidget {
                           width: 3,
                         ),
                       ),
-                      child: ClipOval(
-                        child: Image.network(
-                          'https://media.licdn.com/dms/image/v2/C4E12AQHzBAiANK2ceQ/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1627292304016?e=2147483647&v=beta&t=CaGaKBl8DcF2tV6Ygjhe9uOPJdAc25Gis-KnOGC8G9E',
-                          height: height * 0.20,
-                          width: height * 0.20,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                      child: SizedBox(
+                        height: height * 0.20,
+                     width: height * 0.20,                          child:
+                      DefaultImageWidget(radius: 100,)),
+                      // child: ClipOval(
+                      //   child: Image.network(
+                      //     'https://media.licdn.com/dms/image/v2/C4E12AQHzBAiANK2ceQ/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1627292304016?e=2147483647&v=beta&t=CaGaKBl8DcF2tV6Ygjhe9uOPJdAc25Gis-KnOGC8G9E',
+                      //     height: height * 0.20,
+                      //     width: height * 0.20,
+                      //     fit: BoxFit.cover,
+                      //   ),
+                      // ),
                     ),
                   ],
                 ),
@@ -344,6 +355,50 @@ class InfluencerProfileDetails extends StatelessWidget {
       ),
     );
   }
+  Widget buildSocialTile({
+    required int id,
+    required String url,
+
+    required String name,
+  }) {
+
+
+    switch (id) {
+      case 1: // Facebook
+        return _buildTile('assets/svg/facebook-svgrepo-com.svg', 'فيسبوك',
+          url,);
+      case 2: // Instagram
+        return _buildTile('assets/svg/instagram-1-svgrepo-com.svg', 'إنستقرام',
+          url,);
+      case 3: // TikTok
+        return _buildTile('assets/svg/tiktok-logo-logo-svgrepo-com.svg', "تيك"
+            "توك", url, );
+      case 4: // Twitter
+        return _buildTile('assets/svg/twitter-svgrepo-com.svg', "تويتر | X",
+          url, );
+      case 5: // YouTube
+        return _buildTile('assets/svg/youtube-svgrepo-com.svg', "يوتيوب",
+          url, );
+      default:
+        return _buildTile('assets/svg/youtube-svgrepo-com.svg', name, url, );
+    }
+  }
+
+  Widget _buildTile(String iconPath, String name, String url, ) {
+    return ListTile(
+      leading: SvgPicture.asset(
+        iconPath,
+        height: 30,
+        width: 100
+      ),
+      title: Text(
+        '$name',
+        style: TextStyle(color: Colors.blueAccent,fontSize: 16),
+      ),
+      onTap: () => launchUrl(Uri.parse(url)),
+    );
+  }
+
 }
 
 class RowWidet extends StatelessWidget {

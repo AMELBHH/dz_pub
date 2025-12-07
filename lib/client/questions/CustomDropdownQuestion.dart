@@ -1,11 +1,19 @@
-
+import 'dart:io';
 
 import 'package:dz_pub/client/questions/widget/ConstQuestions.dart';
+import 'package:dz_pub/controllers/providers/promotion_provider.dart';
+import 'package:dz_pub/controllers/show_snack_bar_notifier.dart';
 import 'package:dz_pub/core/styling/App_colors.dart';
 import 'package:dz_pub/core/styling/App_text_style.dart';
 import 'package:dz_pub/widget/Custom_Button_Widget.dart';
 import 'package:dz_pub/widget/Text_Field_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../constants/coordination.dart';
+import '../../constants/get_it_controller.dart';
+import '../../controllers/providers/color_provider.dart';
 
 class CustomDropdownQuestion extends StatelessWidget {
   final String questionText;
@@ -46,14 +54,14 @@ class CustomDropdownQuestion extends StatelessWidget {
   }
 }
 
-class DynamicQuestionScreen extends StatefulWidget {
+class DynamicQuestionScreen extends ConsumerStatefulWidget {
   const DynamicQuestionScreen({super.key});
 
   @override
-  State<DynamicQuestionScreen> createState() => _DynamicQuestionScreenState();
+  ConsumerState createState() => _DynamicScreenState();
 }
 
-class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
+class _DynamicScreenState extends ConsumerState<DynamicQuestionScreen> {
   String? selectedAnswer;
   String? selectedAnswer1;
   String? selectedAnswer2;
@@ -61,6 +69,19 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
   String? selectedAnswer4;
   String? selectedAnswer5;
   String? selectedAnswer6;
+
+  int getPromotionTypeId(String value) {
+    switch (value) {
+      case 'فيديو':
+        return 1;
+      case 'صورة':
+        return 2;
+      case 'كتابة':
+        return 3;
+      default:
+        return 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +92,7 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('ابدء اشهارك الان')),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 23 ,vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 4),
         child: ListView(
           children: [
             /// السؤال الأول
@@ -81,16 +102,27 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
               selectedValue: selectedAnswer,
               items: const [
                 DropdownMenuEntry(
-                    value: 'نعم', label: 'نعم يتطلب اعلاني تنقل المؤثر'),
+                  value: 'نعم',
+                  label: 'نعم يتطلب اعلاني تنقل المؤثر',
+                ),
                 DropdownMenuEntry(
-                    value: 'لا', label: 'لا لايتطلب اعلاني تنقل المؤثر'),
+                  value: 'لا',
+                  label: 'لا لايتطلب اعلاني تنقل المؤثر',
+                ),
               ],
               onSelected: (value) {
                 setState(() {
                   selectedAnswer = value;
-                  selectedAnswer1 =
-                      selectedAnswer2 = selectedAnswer3 = selectedAnswer4 = null;
+                  selectedAnswer1 = selectedAnswer2 = selectedAnswer3 =
+                      selectedAnswer4 = null;
                 });
+                if (value == "نعم") {
+                  ref.read(shouldInfluencerMovementProvider.notifier).state =
+                      "yes";
+                } else {
+                  ref.read(shouldInfluencerMovementProvider.notifier).state =
+                      "no";
+                }
               },
             ),
 
@@ -99,10 +131,11 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
               SizedBox(height: height * 0.03),
               Text('بتنقل المؤثر :', style: AppTextStyle.black19),
               SizedBox(height: height * 0.03),
-              TextFieldwidget(
+              TextFieldWidget(
                 hintText: 'عنوان حضور المؤثر',
                 textInputType: TextInputType.text,
                 maxLength: 50,
+                controller: ref.read(locationController),
                 prefixIcon: const Icon(Icons.location_on_outlined),
               ),
               ConstQuestions(
@@ -120,16 +153,24 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
                 selectedValue: selectedAnswer1,
                 items: const [
                   DropdownMenuEntry(
-                      value: 'التسجيل حسب النموذج', label: 'التسجيل حسب النموذج'),
+                    value: 'التسجيل حسب النموذج',
+                    label: 'التسجيل حسب النموذج',
+                  ),
                   DropdownMenuEntry(
-                      value: 'كتابة المطلوب مباشرة', label: 'كتابة المطلوب مباشرة'),
+                    value: 'كتابة المطلوب مباشرة',
+                    label: 'كتابة المطلوب مباشرة',
+                  ),
                 ],
                 onSelected: (value) {
                   setState(() {
                     selectedAnswer1 = value;
-                    selectedAnswer2 =
-                        selectedAnswer3 = selectedAnswer4 = null;
+                    selectedAnswer2 = selectedAnswer3 = selectedAnswer4 = null;
                   });
+                  if (selectedAnswer1 == 'التسجيل حسب النموذج') {
+                    ref.read(haveAFormProvider.notifier).state = "yes";
+                  } else {
+                    ref.read(haveAFormProvider.notifier).state = "no";
+                  }
                 },
               ),
             ],
@@ -148,18 +189,25 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
                 onSelected: (value) {
                   setState(() {
                     selectedAnswer2 = value;
-                    selectedAnswer3 =
-                        selectedAnswer4 = selectedAnswer5 = selectedAnswer6 = null;
+                    selectedAnswer3 = selectedAnswer4 = selectedAnswer5 =
+                        selectedAnswer6 = null;
                   });
+
+                  final id = getPromotionTypeId(value!);
+
+                  ref.read(promotionTypeProvider.notifier).state = id;
                 },
               ),
 
               /// كتابة
               if (selectedAnswer2 == 'كتابة') ...[
+                Text("اكتب اي توصية او تفاصيل", style: AppTextStyle.black19),
+
                 SizedBox(height: height * 0.03),
                 ConstQuestions(
                   text1: 'اكتب نص المنشور كما تريده ان ينشر',
                   text2: 'ايموجي وصوالح اخرى',
+                  alsoHaveDetails: true,
                 ),
               ],
 
@@ -171,27 +219,53 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
                   selectedValue: selectedAnswer3,
                   items: const [
                     DropdownMenuEntry(
-                        value: 'الصورة جاهزة', label: 'الصورة جاهزة'),
+                      value: 'الصورة جاهزة',
+                      label: 'الصورة جاهزة',
+                    ),
                     DropdownMenuEntry(
-                        value: 'الصورة من انشاء المؤثر',
-                        label: 'الصورة من انشاء المؤثر'),
+                      value: 'الصورة من انشاء المؤثر',
+                      label: 'الصورة من انشاء المؤثر',
+                    ),
                   ],
                   onSelected: (value) {
                     setState(() => selectedAnswer3 = value);
+                    //topic_is_ready
+                    if (value == "الصورة جاهزة") {
+                      ref.read(isTopicReadyProvider.notifier).state = "yes";
+                    } else {
+                      ref.read(isTopicReadyProvider.notifier).state = "no";
+                    }
                   },
                 ),
 
                 if (selectedAnswer3 == 'الصورة جاهزة') ...[
-                   SizedBox(height: height * 0.03),
+                  SizedBox(height: height * 0.03),
                   CustomButtonWidget(
-                    onPressd: () {},
+                    onPressd: () async {
+                      final ImagePicker picker = ImagePicker();
+                      final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
+
+                      if (picked != null) {
+                        // Convert XFile → File
+                        final file = File(picked.path);
+
+                        // Save it to provider
+                        ref.read(fileOfTopicProvider.notifier).state = file;
+                      }
+                      if(ref.read(fileOfTopicProvider) != null){
+                        ref.read(showSnackBarNotifier.notifier)
+                            .showNormalSnackBar(context: context,message: "تم"
+                            " إضافة العنصر بنجاح");
+                      }
+                    },
                     textStyle: AppTextStyle.black19,
                     textButton: '+ اضف الصورة هنا',
                     heigth: height * 0.09,
                     width: width * 0.6,
                     radius: 12,
                     colorButton: AppColors.premrayColor2,
-                  ), SizedBox(height: height * 0.03),
+                  ),
+                  SizedBox(height: height * 0.03),
                   ConstQuestions(
                     text1: 'اكتب الكتابة المرفقة للصورة كما تريدها ان تضهر ',
                     text2: 'اكتب الكتابة المرفقة للصورة كما تريدها ان تضهر ',
@@ -207,32 +281,27 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
                     ],
                     onSelected: (value) {
                       setState(() => selectedAnswer5 = value);
+                      if (value == "لا يتطلب") {
+                        ref.read(haveSampleProvider.notifier).state = "no";
+                      } else {
+                        ref.read(haveSampleProvider.notifier).state = "yes";
+                      }
                     },
                   ),
 
                   if (selectedAnswer5 == 'يتطلب') ...[
-                    TextFieldwidget(
-                      hintText:
-                          'في الاخير سياتيك اتصال من المنصة بخصوص المعلومات ارسال نموذجك الى المؤثر',
-                      textInputType: TextInputType.text,
-                      maxLines: 4,
-                      suffixIcon: const Icon(Icons.attach_file),
-                    ),
+                    HintTextWidget(),
                     SizedBox(height: height * 0.03),
                     ConstQuestions(
+                      textFormFieldController: ref.read(detailsController),
                       text1: 'اكتب اي توصية او تفاصيل',
                       text2: 'تفاصيل',
                     ),
                   ] else if (selectedAnswer5 == 'لا يتطلب') ...[
-                    TextFieldwidget(
-                      hintText:
-                          'في الاخير سياتيك اتصال من المنصة بخصوص المعلومات ارسال نموذجك الى المؤثر',
-                      textInputType: TextInputType.text,
-                      maxLines: 4,
-                      suffixIcon: const Icon(Icons.attach_file),
-                    ),
+                    HintTextWidget(),
                     SizedBox(height: height * 0.03),
                     ConstQuestions(
+                      textFormFieldController: ref.read(detailsController),
                       text1: 'اكتب اي توصية او تفاصيل',
                       text2: 'تفاصيل',
                     ),
@@ -247,10 +316,14 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
                   hintText: 'اختر الجواب المناسب ',
                   selectedValue: selectedAnswer4,
                   items: const [
-                    DropdownMenuEntry(value: 'الفيديو جاهز', label: 'الفيديو جاهز'),
                     DropdownMenuEntry(
-                        value: 'الفيديو من انشاء المؤثر',
-                        label: 'الفيديو من انشاء المؤثر'),
+                      value: 'الفيديو جاهز',
+                      label: 'الفيديو جاهز',
+                    ),
+                    DropdownMenuEntry(
+                      value: 'الفيديو من انشاء المؤثر',
+                      label: 'الفيديو من انشاء المؤثر',
+                    ),
                   ],
                   onSelected: (value) {
                     setState(() => selectedAnswer4 = value);
@@ -258,16 +331,34 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
                 ),
 
                 if (selectedAnswer4 == 'الفيديو جاهز') ...[
-                   SizedBox(height: height * 0.03),
+                  SizedBox(height: height * 0.03),
                   CustomButtonWidget(
-                    onPressd: () {},
+                    onPressd: () async {
+                      final ImagePicker picker = ImagePicker();
+                      final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
+
+                      if (picked != null) {
+                        // Convert XFile → File
+                        final file = File(picked.path);
+
+                        // Save it to provider
+                        ref.read(fileOfTopicProvider.notifier).state = file;
+
+                      }
+                      if(ref.read(fileOfTopicProvider) != null){
+                        ref.read(showSnackBarNotifier.notifier)
+                            .showNormalSnackBar(context: context,message: "تم"
+                            " إضافة العنصر بنجاح");
+                      }
+                    },
                     textStyle: AppTextStyle.black19,
                     textButton: '+ اضف الفيديو هنا',
                     heigth: height * 0.09,
                     width: width * 0.6,
                     radius: 12,
                     colorButton: AppColors.premrayColor2,
-                  ), SizedBox(height: height * 0.03),
+                  ),
+                  SizedBox(height: height * 0.03),
                   ConstQuestions(
                     text1: 'اكتب الكتابة المرفقة للفيديو كما تريدها ان تضهر ',
                     text2: 'اكتب الكتابة المرفقة للفيديو كما تريدها ان تضهر ',
@@ -287,20 +378,14 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
                   ),
 
                   if (selectedAnswer6 == 'يتطلب') ...[
-                    TextFieldwidget(
-                      hintText:
-                          'في الاخير سياتيك اتصال من المنصة بخصوص المعلومات ارسال نموذجك الى المؤثر',
-                      textInputType: TextInputType.text,
-                      maxLines: 4,
-                      suffixIcon: const Icon(Icons.attach_file),
-                    ),
+                    HintTextWidget(),
                     SizedBox(height: height * 0.03),
                     ConstQuestions(
                       text1: 'اكتب اي توصية او تفاصيل',
                       text2: 'تفاصيل',
                     ),
                   ] else if (selectedAnswer6 == 'لا يتطلب') ...[
-                    TextFieldwidget(
+                    TextFieldWidget(
                       hintText:
                           'في الاخير سياتيك اتصال من المنصة بخصوص المعلومات ارسال نموذجك الى المؤثر',
                       textInputType: TextInputType.text,
@@ -319,8 +404,7 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
 
             /// كتابة المطلوب مباشرة
             if (selectedAnswer1 == 'كتابة المطلوب مباشرة') ...[
-             
-             // Text('من دون تنقل المؤثر :', style: AppTextStyle.black19),
+              // Text('من دون تنقل المؤثر :', style: AppTextStyle.black19),
               SizedBox(height: height * 0.03),
               ConstQuestions(
                 text1: 'اكتب المطلوب من المؤثر:',
@@ -330,6 +414,26 @@ class _DynamicQuestionScreenState extends State<DynamicQuestionScreen> {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class HintTextWidget extends ConsumerWidget {
+  const HintTextWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
+      child: Text(
+        "في الاخير سياتيك اتصال من المنصة بخصوص المعلومات ارسال نموذجك الى المؤثر",
+        style: TextStyle(
+          color: ref.read(themeModeNotifier.notifier).textTheme(ref: ref),
+
+          fontSize: getIt<AppDimension>().isSmallScreen(context) ? 12 : 14,
+        ),
+        softWrap: true,
       ),
     );
   }

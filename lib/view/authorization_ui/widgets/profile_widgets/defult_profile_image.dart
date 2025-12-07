@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
 class DefaultImageWidget extends ConsumerWidget {
-  const DefaultImageWidget({super.key,this.radius});
+  const   DefaultImageWidget({super.key,this.radius});
   final double? radius;
 
   @override

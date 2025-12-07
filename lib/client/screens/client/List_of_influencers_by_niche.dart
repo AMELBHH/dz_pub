@@ -37,10 +37,13 @@ class _ListOfInfluencersByNicheState extends ConsumerState<ListOfInfluencersByNi
 
     final size = MediaQuery.of(context).size;
     //final width = size.width;
-    final height = size.height;
     return
 
       Scaffold(
+        appBar: AppBar(
+          title: const Text("قائمة المؤثرين حسب المجال",style: TextStyle
+            (fontSize: 16),),
+        ),
 
         body:
         ref.watch(getCategoryNotifier).isLoading ?
@@ -51,8 +54,7 @@ class _ListOfInfluencersByNicheState extends ConsumerState<ListOfInfluencersByNi
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child:  Consumer(
             builder: (context, ref, _) {
-              final influencerState = ref.watch(getInfluencerNotifier);
-
+              final influencerState = ref.watch(influencerNotifier);
               return FutureBuilder<List<Category?>?>(
                 future: categoriesFuture,
                 builder: (context, snapshot) {
@@ -80,9 +82,10 @@ class _ListOfInfluencersByNicheState extends ConsumerState<ListOfInfluencersByNi
                           heigth: 55,
                           onPressd: () async {
                             await ref
-                                .read(getInfluencerNotifier.notifier)
-                                .getInfluencer(cat?.id ?? 0);
+                                .read(influencerNotifier.notifier)
+                                .getInfluencers(categoryId:cat?.id ?? 0);
 ref.read(categorySelectableName.notifier).state = cat?.name ?? "";
+ref.read(categorySelectedId.notifier).state = cat?.id ?? 0;
                             context.pushNamed(
                               AppRoutes.listOfInfluencers,
                               queryParameters: {"categoryId": cat?.id.toString()},

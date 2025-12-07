@@ -23,7 +23,12 @@ class ServerLocalDiv {
 class   ServerLocalhostEm {
   static String server = "http://192.168.2.4:8000/api/";
   static String seedGet = "${server}seed/get/";
-    static String getInfluencersByCategory = "${seedGet}influencer-category";
+  static String createPromotion = "${server}add/promation";
+  static String getPromotionsOfClient = "${server}get/promation";
+
+  static String getInfluencersByCategory = "${seedGet}influencer-category";
+    static String getInfluencerById = "${seedGet}influencer";
+    static String getAllInfluencers = "${seedGet}influencers";
   static String getCategories = "${seedGet}category";
   // static String postAll = "${server}post/all";
   static String socialMediaOfIn = "${server}get-social-media-links-by-influencer";

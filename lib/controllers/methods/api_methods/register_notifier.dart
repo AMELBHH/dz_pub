@@ -62,7 +62,8 @@ class RegisterNotifier extends StateNotifier<AuthState> {
       // Clear controllers
       ref.read(emailLoginController).clear();
       ref.read(passwordLoginController).clear();
-
+      ref.read(userTypeProvider.notifier).state = NewSession.get(PrefKeys
+          .userType, 'client') ;
       // Stop loading
       state = state.copyWith(isLoading: false, hasError: false);
 

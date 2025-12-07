@@ -10,9 +10,10 @@ final getCategoryNotifier = StateNotifierProvider<GetCategoryNotifier,
   return GetCategoryNotifier();
 });
 
-final getInfluencerNotifier = StateNotifierProvider<GetInfluencerNotifier,
+final influencerNotifier = StateNotifierProvider<InfluencerNotifier,
     InfluencerState>(
         (ref) {
-  return  GetInfluencerNotifier();
+  return  InfluencerNotifier();
 });
 final categorySelectableName = StateProvider<String>((ref) => '');
+final categorySelectedId = StateProvider<int>((ref) => 0);

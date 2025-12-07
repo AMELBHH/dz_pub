@@ -4,7 +4,8 @@ class AppRoutes {
   static const firstIntroClient = '/First_Intro_Client';
   static const secondIntroClient = '/Second_Intro_Client';
   static const thirdIntroClient = '/Third_Intro_Client';
-
+static const promotionDetails = '/PromotionDetails';
+static const listOfClientPromotions = '/ListOfClientPromotions';
   static const firstIntroInfluencers = '/First_Intro_Influencers';
   static const secondIntroInfluencers = '/Second_Intro_Influencers';
   static const thirdIntroInfluencers = '/Third_Intro_Influencers';

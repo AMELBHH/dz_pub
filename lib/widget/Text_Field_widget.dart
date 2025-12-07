@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-class TextFieldwidget extends StatelessWidget {
+class TextFieldWidget extends StatelessWidget {
   final String hintText;
   final TextInputType textInputType;
   final Widget? prefixIcon;
   final int? maxLength;
   final int? maxLines;
+  final TextEditingController? controller;
   final Widget? suffixIcon;
 
-  const TextFieldwidget({
+  const TextFieldWidget({
     super.key,
     required this.hintText,
     this.maxLength,
@@ -16,15 +17,17 @@ class TextFieldwidget extends StatelessWidget {
     this.maxLines,
     this.suffixIcon,
     required this.textInputType,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      style: TextStyle(color: Colors.black87),
       keyboardType: textInputType,
       maxLength: maxLength,
       maxLines: maxLines,
-
+      controller: controller,
       decoration: InputDecoration(
         // labelText: 'عنوان الحضور',
         hintText: hintText,

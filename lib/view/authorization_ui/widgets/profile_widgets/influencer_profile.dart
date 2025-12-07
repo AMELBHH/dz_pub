@@ -63,10 +63,10 @@ class _InfluencerProfileState extends ConsumerState<InfluencerProfile> {
                     } else if (snapshot.hasError) {
                       return Text('حدث خطأ: ${snapshot.error}');
                     } else {
-                      final socialMediaLinks = snapshot.data ?? [];
+                      final   socialMediaLinks = snapshot.data ?? [];
 
                       if (socialMediaLinks.isEmpty) {
-                        return const Text("لا توجد روابط حالياً");
+                          return const Text("لا توجد روابط حالياً");
                       } else {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

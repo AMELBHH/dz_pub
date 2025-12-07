@@ -23,7 +23,7 @@ class CustomPromotion extends StatelessWidget {
             children: [
               SizedBox(height: height * 0.1),
 
-              TextFieldwidget(
+              TextFieldWidget(
                 hintText:
                     'دمج المؤثرين /n تريد منا ان نقترح لك مؤثرا يليق بفكرتك ومنتجك',
                 textInputType: TextInputType.text,

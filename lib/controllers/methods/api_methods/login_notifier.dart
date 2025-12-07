@@ -26,7 +26,8 @@ class LoginNotifier extends StateNotifier<AuthState> {
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       debugPrint("social media links of user ${body}");
-
+      ref?.read(userTypeProvider.notifier).state = NewSession.get(PrefKeys
+          .userType, 'client') ;
       return SocialMediaResponse.fromJson(body).links??[];
     } else {
       throw Exception("Failed to load social media links: ${response.statusCode}");

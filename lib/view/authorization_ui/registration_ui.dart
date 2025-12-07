@@ -444,7 +444,7 @@ debugPrint("type of infu on the ui ${ref.read(typeOfInfluencerProvider)}");
 }
 class SocialMediaItem {
   final int id;               // your index
-  final String label;         // name
+    final String label;         // name
   bool selected;              // if user selected it
   String url;                 // user URL
 
