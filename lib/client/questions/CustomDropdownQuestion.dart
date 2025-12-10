@@ -243,20 +243,20 @@ class _DynamicScreenState extends ConsumerState<DynamicQuestionScreen> {
                   CustomButtonWidget(
                     onPressd: () async {
                       final ImagePicker picker = ImagePicker();
-                      final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
+
+                      // pick image only
+                      final XFile? picked =
+                      await picker.pickImage(source: ImageSource.gallery);
 
                       if (picked != null) {
-                        // Convert XFile → File
                         final file = File(picked.path);
 
-                        // Save it to provider
                         ref.read(fileOfTopicProvider.notifier).state = file;
-                      }
-                      if(ref.read(fileOfTopicProvider) != null){
-                        ref.read(showSnackBarNotifier.notifier)
-                            .showNormalSnackBar(context: context,message: "تم"
-                            " إضافة العنصر بنجاح");
-                      }
+                        ref.read(showSnackBarNotifier.notifier).showNormalSnackBar(
+                          context: context,
+                          message: "تم إضافة الصورة بنجاح",
+                        );     }
+
                     },
                     textStyle: AppTextStyle.black19,
                     textButton: '+ اضف الصورة هنا',
@@ -327,6 +327,13 @@ class _DynamicScreenState extends ConsumerState<DynamicQuestionScreen> {
                   ],
                   onSelected: (value) {
                     setState(() => selectedAnswer4 = value);
+
+    if (value == "الفيديو جاهز") {
+    ref.read(isTopicReadyProvider.notifier).state = "yes";
+    } else {
+    ref.read(isTopicReadyProvider.notifier).state = "no";
+
+    }
                   },
                 ),
 
@@ -335,21 +342,21 @@ class _DynamicScreenState extends ConsumerState<DynamicQuestionScreen> {
                   CustomButtonWidget(
                     onPressd: () async {
                       final ImagePicker picker = ImagePicker();
-                      final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
+
+                      // pick video only
+                      final XFile? picked =
+                      await picker.pickVideo(source: ImageSource.gallery);
 
                       if (picked != null) {
-                        // Convert XFile → File
                         final file = File(picked.path);
 
-                        // Save it to provider
                         ref.read(fileOfTopicProvider.notifier).state = file;
+                        ref.read(showSnackBarNotifier.notifier).showNormalSnackBar(
+                          context: context,
+                          message: "تم إضافة الفيديو بنجاح",
+                        );    }
 
-                      }
-                      if(ref.read(fileOfTopicProvider) != null){
-                        ref.read(showSnackBarNotifier.notifier)
-                            .showNormalSnackBar(context: context,message: "تم"
-                            " إضافة العنصر بنجاح");
-                      }
+
                     },
                     textStyle: AppTextStyle.black19,
                     textButton: '+ اضف الفيديو هنا',

@@ -8,15 +8,18 @@ class     AuthState {
   final bool hasError;
   final Future<List<Category>>? categories;
   final Future<List<SocialMediaLink>>? socialMediaLinks;
+  final String? userType;
 
   AuthState( {this.isLoading = false,this.hasError = false, this
       .errorMessage,this.categories,
-  this.socialMediaLinks
+  this.socialMediaLinks,
+    this.userType = "client"
   });
 
   AuthState copyWith({bool?  isLoading, String? errorMessage,bool ? hasError,
     Future<List<Category>>? categories,
-    Future<List<SocialMediaLink>>? socialMediaLinks
+    Future<List<SocialMediaLink>>? socialMediaLinks,
+    String? userType
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
@@ -24,6 +27,7 @@ class     AuthState {
       errorMessage: errorMessage ?? this.errorMessage,
       categories: categories ?? this.categories,
       socialMediaLinks: socialMediaLinks ?? this.socialMediaLinks,
+      userType: userType ?? this.userType,
     );
   }
 }

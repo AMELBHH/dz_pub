@@ -83,20 +83,24 @@ class Promotion {
       shouldInfluencerMovement: json['should_influencer_movment'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
-
-      socialMedia: (json['social_media'] as List)
+      socialMedia: json['social_media'] != null
+          ? (json['social_media'] as List)
           .map((e) => _SocialMedia.fromJson(e))
-          .toList(),
+          .toList()
+          : [],
 
-      socialMediaTypes: (json['social_media_types'] as List)
+      socialMediaTypes: json['social_media_types'] != null
+          ? (json['social_media_types'] as List)
           .map((e) => SocialMediaType.fromJson(e))
-          .toList(),
+          .toList()
+          : [],
 
-      typeOfPromotions: (json['type_of_promations'] as List)
+      typeOfPromotions: json['type_of_promations'] != null
+          ? (json['type_of_promations'] as List)
           .map((e) => TypeOfPromotion.fromJson(e))
-          .toList(),
+          .toList()
+          : [],
 
-      // Conditional (null if not exists)
       movement: json['movement'] != null
           ? Movement.fromJson(json['movement'])
           : null,
@@ -109,20 +113,20 @@ class Promotion {
           ? (json['recommendations'] as List)
           .map((e) => Recommendation.fromJson(e))
           .toList()
-          : null,
+          : [],
 
       topicFromInfluancers: json['topic_from_influancers'] != null
           ? (json['topic_from_influancers'] as List)
           .map((e) => TopicFromInfluencer.fromJson(e))
           .toList()
-          : null,
+          : [],
 
       topicAlreadyReadies: json['topic_already_readies'] != null
           ? (json['topic_already_readies'] as List)
           .map((e) => TopicAlreadyReady.fromJson(e))
           .toList()
-          : null,
-    );
+          : [],
+ );
   }
 }
 class _SocialMedia {

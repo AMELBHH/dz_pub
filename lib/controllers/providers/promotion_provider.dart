@@ -53,6 +53,11 @@ final priceController = StateProvider<TextEditingController>((ref) {
   ref.onDispose(
       () => controller.dispose()); // Dispose when the provider is disposed
   return controller;
+});final customPromotionController = StateProvider<TextEditingController>((ref) {
+  final controller = TextEditingController();
+  ref.onDispose(
+      () => controller.dispose()); // Dispose when the provider is disposed
+  return controller;
 });
   //socialMedia
 final socialMediaIdsProvider = StateProvider<List<int>>((ref) => []);
@@ -65,3 +70,4 @@ final clientIdProvider = StateProvider<int>((ref) => 0);
 //influencerId
 final influencerIdProvider = StateProvider<int>((ref) => 0);
 final promotionTypeProvider = StateProvider<int?>((ref) => null);
+

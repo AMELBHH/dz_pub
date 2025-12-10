@@ -1,6 +1,8 @@
 //add, get, get according status ...
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:dz_pub/api/promations_models/custom_promotions.dart';
 import 'package:dz_pub/api/promations_models/promotions.dart';
 import 'package:dz_pub/constants/strings.dart';
 import 'package:dz_pub/controllers/statuses/promotion_state.dart';
@@ -14,86 +16,102 @@ class PromotionNotifier extends StateNotifier<PromotionState> {
 
   // ===============================
   // INTERNAL REQUEST (PRIVATE)
-  // ===============================
-  Future<Promotion> _createPromotion(Map<String, dynamic> body, {
-    File? fileOfRecommendation,
-    File? fileOfTopic,
-    File? mediaFile,
-  }) async {
-state = state.copyWith(
-  isLoading: true,
-  hasError: false,
-  status: false,
-  errorMessage: "",
-);
-    final url = Uri.parse(ServerLocalhostEm.createPromotion);
+  // ==============================
+  Future<Promotion> _createPromotion(
+      Map<String, dynamic> body, {
+        File? fileOfRecommendation,
+        File? fileOfTopic,
+        File? mediaFile,
+      }) async {
 
-    final request = http.MultipartRequest('POST', url);
+    final dio = Dio();
 
-    // Authorization
-    request.headers['Authorization'] =
+    dio.options.headers['Authorization'] =
     'Bearer ${NewSession.get(PrefKeys.token, '')}';
 
-    // -----------------------
-    // ADD TEXT FIELDS
-    // -----------------------
+    // 1) أنشئ FormData فاضي
+    final formData = FormData();
 
+    // 2) أضف العناصر العادية (بدون الليست)
     body.forEach((key, value) {
-      if (value == null) return;
-
-      if (value is List) {
-        // special case: arrays
-        for (var v in value) {
-          request.fields["$key[]"] = v.toString();
-        }
-      } else {
-        request.fields[key] = value.toString();
+      if (value != null &&
+          key != "social_media" &&
+          key != "social_media_types") {
+        formData.fields.add(MapEntry(key, value.toString()));
       }
     });
 
-    // -----------------------
-    // ADD FILES IF EXISTS
-    // -----------------------
-    Future<void> addFile(String field, File? file) async {
-      if (file == null) return;
-      final stream = http.ByteStream(file.openRead());
-      final length = await file.length();
-      final multipart = http.MultipartFile(
-          field, stream, length,
-          filename: file.path.split('/').last
-      );
-      request.files.add(multipart);
+    // ============================
+    // 3) FIX: social_media list
+    // ============================
+    if (body["social_media"] != null) {
+      List<int> sm = body["social_media"];
+      for (int i = 0; i < sm.length; i++) {
+        formData.fields.add(
+          MapEntry("social_media[$i]", sm[i].toString()),
+        );
+      }
     }
 
-    await addFile("file_of_recommendation", fileOfRecommendation);
-    await addFile("file_of_topic", fileOfTopic);
-    await addFile("file_path", mediaFile);
-
-    final streamed = await request.send();
-    final response = await http.Response.fromStream(streamed);
-
-    if (response.statusCode >= 400) {
-      state = state.copyWith(
-        isLoading: false,
-        hasError: true,
-        status: false,
-        errorMessage: "Failed: ${response.body}",
-      );
-      throw Exception("Failed: ${response.body}");
-
-    }else if(response.statusCode >= 200 && response.statusCode < 300){
-      state = state.copyWith(
-        isLoading: false,
-        status: true,
-        hasError: false,
-        errorMessage: "",
-      );
+    // ============================
+    // 4) FIX: social_media_types list
+    // ============================
+    if (body["social_media_types"] != null) {
+      List<int> smt = body["social_media_types"];
+      for (int i = 0; i < smt.length; i++) {
+        formData.fields.add(
+          MapEntry("social_media_types[$i]", smt[i].toString()),
+        );
+      }
     }
 
-    final json = jsonDecode(response.body);
-    debugPrint("json $json");
+    // 5) الملفات
+    if (fileOfRecommendation != null) {
+      formData.files.add(MapEntry(
+        'file_of_recommendation',
+        await MultipartFile.fromFile(
+          fileOfRecommendation.path,
+          filename: fileOfRecommendation.path.split('/').last,
+        ),
+      ));
+    }
 
-    return Promotion.fromJson(json["promotion"]);
+    if (fileOfTopic != null) {
+      formData.files.add(MapEntry(
+        'file_of_topic',
+        await MultipartFile.fromFile(
+          fileOfTopic.path,
+          filename: fileOfTopic.path.split('/').last,
+        ),
+      ));
+    }
+
+    if (mediaFile != null) {
+      formData.files.add(MapEntry(
+        'file_path',
+        await MultipartFile.fromFile(
+          mediaFile.path,
+          filename: mediaFile.path.split('/').last,
+        ),
+      ));
+    }
+
+    // 6) إرسال الريكويست
+    try {
+      final response = await dio.post(
+        ServerLocalhostEm.createPromotion,
+        data: formData,
+      );
+
+      return Promotion.fromJson(response.data["promotion"]);
+
+    } on DioException catch (e) {
+     // print("STATUS: ${e.response?.statusCode}");
+      //print("DATA: ${e.response?.data}");
+      //print("HEADERS: ${e.response?.headers}");
+
+      throw Exception(e.response?.data);
+    }
   }
 
   // ===============================
@@ -133,13 +151,11 @@ state = state.copyWith(
   }) async {
 debugPrint("promation Type is $promationTypeId");
     state = state.copyWith(isLoading: true, hasError: false,errorMessage: "");
-
+debugPrint("tipick is Ready ???? ------>$topicIsReady");
     try {
       final body = {
 
-        "client_id":216,
-        //NewSession.get(PrefKeys.id, 0),
-        //clientId,
+        "client_id": clientId,
         "influencer_id": influencerId,
         "requirements": requirements,
         "price": price,
@@ -186,34 +202,50 @@ debugPrint("promation Type is $promationTypeId");
       );
     }
   }
-  Future<List<Promotion>> _getPromotionsOfClient() async {
-    final url = Uri.parse("${ServerLocalhostEm.getPromotionsOfClient}?client_id=${NewSession.get(PrefKeys.id, 0)}");
-    final response = await http.post(
+
+
+
+  Future<List<Promotion>> _getPromotionsOfClient({int ? statusId }) async {
+     late Uri url;
+     if(statusId!=null)
+     {
+       url = Uri.parse(
+           "${ServerLocalhostEm
+               .getPromotionsByStatus}?influencer_id=${NewSession
+           .get(PrefKeys.id, 0)}&status_id=$statusId");
+     }else {
+       url = Uri.parse(
+           "${ServerLocalhostEm.getPromotionsOfClient}?client_id=${NewSession
+               .get(PrefKeys.id, 0)}");
+     }
+     final response = await http.post(
         url,
         headers: {
-          'Authorization': 'Bearer ${NewSession.get(PrefKeys.token, '')}',
+          'Authorization': 'Bearer ${NewSession.get(PrefKeys.token, "")}',
         },
         );
-    debugPrint("status code of get promotion of client is ${response.statusCode}");
 
     if (response.statusCode >= 400) {
       debugPrint("Failed: ${response.body}");
       throw Exception("Failed: ${response.body}");
     }
     final json = jsonDecode(response.body);
-    debugPrint("json $json");
+      debugPrint("json $json");
     return (json["promotions"] as List)
         .map((e) => Promotion.fromJson(e))
         .toList();
   }
-  Future<void> getPromotionsOfClient() async {
+  Future<void> getPromotionsOfClient({int ? statusId }) async {
     state = state.copyWith(isLoading: true, hasError: false,errorMessage: "");
     try {
-      final promotions = await _getPromotionsOfClient();
+      final promotions = await _getPromotionsOfClient(statusId:statusId);
+      debugPrint("promations is status of the promations nototigfier is "
+          "${state.promotions}");
       state = state.copyWith(
         isLoading: false,
         promotions: Future.value(promotions),
       );
+
     } catch (e) {
       // state = state.copyWith(
       //   isLoading: false,
@@ -221,6 +253,82 @@ debugPrint("promation Type is $promationTypeId");
       //   errorMessage: e.toString(),
       // );
       //throw Exception(e.toString());
+    }
+  }
+
+
+  Future<List<CustomPromotion>> _getCustomPromotionByClientId() async {
+    final url =
+        "${ServerLocalhostEm.getCustomPromotion}?client_id=${NewSession.get(PrefKeys.id, 0)}";
+
+    final response = await http.get(Uri.parse(url));
+
+    debugPrint("response : ${response.body}");
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to load custom promotion");
+    }
+
+    final body = jsonDecode(response.body);
+
+    debugPrint("success to load custom promotion : ${body['data']}");
+
+    // body['data'] is LIST now
+    return (body['data'] as List)
+        .map((json) => CustomPromotion.fromJson(json))
+        .toList();
+  }
+
+  Future<void> getCustomPromotionByClientId() async {
+    state = state.copyWith(isLoading: true,);
+    final promotion = await _getCustomPromotionByClientId();
+
+
+    state = state.copyWith(
+        isLoading: false,
+        customPromotion: Future.value(promotion)
+    );
+  }
+  Future<void> _createCustomPromotion({required String text}) async {
+    final clientId = NewSession.get(PrefKeys.id, 0);
+
+    final url = Uri.parse(
+      "${ServerLocalhostEm.createCustomPromotion}"
+          "?client_id=$clientId"
+          "&text=${Uri.encodeComponent(text)}",
+    );
+
+    final response = await http.get(url);
+
+    debugPrint("STATUS: ${response.statusCode}");
+    debugPrint("BODY: ${response.body}");
+
+    // لو بدك، ممكن تتجاهل التحقق، بس هذا الأفضل
+    if (response.statusCode != 200) {
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: "Failed to create custom promotion",
+      );
+      throw Exception("Failed to create custom promotion");
+    }
+
+    // لا return… لأنها void
+  }
+
+  Future<void> createCustomPromotion({required String text}) async {
+    state = state.copyWith(isLoading: true, hasError: false,errorMessage: "");
+    try {
+    await _createCustomPromotion(text: text);
+      state = state.copyWith(
+        isLoading: false,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: e.toString(),
+      );
     }
   }
 }

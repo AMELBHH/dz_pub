@@ -23,8 +23,13 @@ class ServerLocalDiv {
 class   ServerLocalhostEm {
   static String server = "http://192.168.2.4:8000/api/";
   static String seedGet = "${server}seed/get/";
+  static String seedAdd = "${server}seed/add";
+  static String getCustomPromotion = "${seedGet}custom-promotion";
   static String createPromotion = "${server}add/promation";
+  static String createCustomPromotion = "$seedAdd/custom-promotion";
+  static String getUserType = "${seedGet}user-type";
   static String getPromotionsOfClient = "${server}get/promation";
+  static String   getPromotionsByStatus = "${server}get/promation-by-status";
 
   static String getInfluencersByCategory = "${seedGet}influencer-category";
     static String getInfluencerById = "${seedGet}influencer";

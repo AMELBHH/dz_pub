@@ -29,15 +29,15 @@ class _ButtonLoginCompletedWidgetState extends ConsumerState<ButtonLoginComplete
         width: double.infinity,
         height: getIt<AppDimension>().isSmallScreen(context) ? 55 / 1.2 : 55,
         child: ElevatedButtonWidget(
-            onPressed: () {
+            onPressed: ()async {
 
               validateAndLogin(ref, context);
 
 
 
-              setState(() {
 
-});
+
+
 
             },
             context: context,

@@ -2,9 +2,8 @@ import 'package:dz_pub/api/promations_models/promotions.dart';
 import 'package:dz_pub/controllers/providers/color_provider.dart';
 import 'package:dz_pub/controllers/providers/influencer_provider.dart';
 import 'package:dz_pub/controllers/providers/promotion_provider.dart';
-import 'package:dz_pub/widget/Custom_Button_Widget.dart';
-import 'package:dz_pub/widget/promotion_widgets/card_container_widget.dart';
 import 'package:dz_pub/widget/promotion_widgets/client_card_widget.dart';
+import 'package:dz_pub/widget/promotion_widgets/file_section_widget.dart';
 import 'package:dz_pub/widget/promotion_widgets/influencer_card_widget.dart';
 import 'package:dz_pub/widget/promotion_widgets/movement_section_widget.dart';
 import 'package:dz_pub/widget/promotion_widgets/promotion_card_widget.dart';
@@ -16,22 +15,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
 
-class ListOfClientPromotions extends ConsumerStatefulWidget {
-  const ListOfClientPromotions({super.key});
+class ListOfPromotions extends ConsumerStatefulWidget {
+  const ListOfPromotions({super.key, this.statusId, this.title});
+  final int ?statusId;
+  final String ?title;
 
   @override
   ConsumerState createState() => _ListOfClientPromotionsState();
 }
 
 class _ListOfClientPromotionsState
-    extends ConsumerState<ListOfClientPromotions> {
+    extends ConsumerState<ListOfPromotions> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(promotionProvider.notifier).getPromotionsOfClient();
-
-
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_)async {
+     await ref.read(promotionProvider.notifier).getPromotionsOfClient(statusId: widget.statusId);
     });
 
   }
@@ -41,6 +40,9 @@ class _ListOfClientPromotionsState
   Widget build(BuildContext context) {
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title??"إشهاراتي"),
+      ),
       body: FutureBuilder<List<Promotion>>(
         future: ref.watch(promotionProvider).promotions,
         builder: (context, snapshot) {
@@ -49,6 +51,9 @@ class _ListOfClientPromotionsState
           }
 
           if (snapshot.hasData) {
+            if (snapshot.data == null || snapshot.data!.isEmpty) {
+              return Center(child: Text("لا يوجد إشهارات"));
+            }
             return ListView.builder(
               itemCount: snapshot.data?.length,
               itemBuilder: (context, index) {
@@ -69,7 +74,7 @@ class _ListOfClientPromotionsState
           } else {
             return Center(child: CircularProgressIndicator());
           }
-        },
+    },
       ));
 
   }
@@ -120,7 +125,7 @@ class _PromotionDetailsScreenState
               isInDetailsScreen: true,
               textStyle: TextStyle(color: ref.read(themeModeNotifier.notifier).primaryTheme(ref: ref)),),
             ScriptSection(promotion: widget.promotion ?? Promotion()),
-            //FilesSection(promotion: promotion),
+            FilesSection(promotion: widget.promotion ?? Promotion()),
             TopicsSection(promotion: widget.promotion ?? Promotion()),
             RecommendationsSection(promotion: widget.promotion ?? Promotion()),
             MovementSection(promotion: widget.promotion ?? Promotion()),

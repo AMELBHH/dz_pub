@@ -68,9 +68,13 @@ class ShowSnackBarNotifier extends StateNotifier<ShowSnackBarState> {
 
   void showNormalSnackBar(
       {required BuildContext context,
+
       String? message,
       Color? backgroundColor,
-      Color? textColor}) {
+
+      Color? textColor,
+      bool isLoading = false,
+      }) {
     message?.isNotEmpty ?? false
         ? state = state.copyWith(message: message)
         : state = state.copyWith(message: null);
@@ -80,7 +84,27 @@ class ShowSnackBarNotifier extends StateNotifier<ShowSnackBarState> {
 
         duration: const Duration(seconds: 3),
         // padding: kTabLabelPadding,
-        content: Text(
+        content:
+        isLoading ?
+
+         Center(
+      child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+        spacing: 10   ,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 16),
+          Text(
+            "جاري الإرسال...",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      )):
+        Text(
           state.message ?? "",
           style: TextStyle(
             fontSize: getIt<AppDimension>().isSmallScreen(context) ? 14 : 16,
@@ -90,6 +114,7 @@ class ShowSnackBarNotifier extends StateNotifier<ShowSnackBarState> {
         ),
       ),
     );
+
   }
 }
 final showSnackBarNotifier =

@@ -2,6 +2,7 @@ import 'package:dz_pub/client/screens/Influencers/influencers_home_screen.dart';
 import 'package:dz_pub/constants/strings.dart';
 import 'package:dz_pub/controllers/providers/auth_provider.dart';
 import 'package:dz_pub/controllers/providers/influencer_provider.dart';
+import 'package:dz_pub/controllers/show_snack_bar_notifier.dart';
 import 'package:dz_pub/core/styling/App_colors.dart';
 
 import 'package:dz_pub/core/styling/App_text_style.dart';
@@ -33,11 +34,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(categorySelectableName.notifier).state = '';
       ref.read(categorySelectedId.notifier).state = 0;
+
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final logged = NewSession.get(PrefKeys.logged, "");
+    final userTypeStored = NewSession.get(PrefKeys.userType, "client");
+    final userTypeJson = ref.watch(loginNotifier).userType;
+    final userTypeToCheck = (logged == "") ? userTypeStored : userTypeJson;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -51,6 +59,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               const Tab(icon: Icon(Icons.person)),
             ],
             onTap: (index) async {
+              if(index == 0){
+                debugPrint("NewSession logged $logged)}");
+                debugPrint("NewSession userTypeStored $userTypeStored");
+                debugPrint("NewSession userTypeJson $userTypeJson");
+                debugPrint("NewSession userTypeToCheck $userTypeToCheck");
+              }
               if (index == 1) {
                 if(NewSession.get(PrefKeys.userTypeId, 1) == 2){
                 if (ref.read(loginNotifier).categories == null ||
@@ -68,12 +82,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         body: TabBarView(
           children: [
             //home
-            Padding(
+
+     Padding(
+
+
               padding: const  EdgeInsets.symmetric(horizontal: 20),
               child:
-          ref.watch(userTypeProvider.notifier).state == "client" ?
-              ClientHome(): InfluencersHome(),
-            ),
+
+
+       userTypeToCheck == "client"?
+       ClientHome():
+     InfluencersHome()
+
+         ),
             //profile
 
 
@@ -168,12 +189,30 @@ class ClientHome extends ConsumerWidget {
           CustomButtonWidget(
               colorButton: AppColors.premrayColor,
             onPressd: () {
+if(NewSession.get(PrefKeys.logged, "") == ""){
+  ref.read(showSnackBarNotifier.notifier).showNormalSnackBar(context:
+  context,message: "يرجى تسحيل الدخول أولا");
+  return;
+}
+context.pushNamed(AppRoutes.listOfPromotions);
+                debugPrint("here is life of promation of cliet!!!");
 
-              debugPrint("here is life of promation of cliet!!!");
-              context.pushNamed(AppRoutes.listOfClientPromotions);
-              debugPrint("listOfClientPromotions");
+                debugPrint("listOfClientPromotions");
             },
             textButton: 'اشهاراتي',
+            textStyle: AppTextStyle.homebuttonStyle,
+            heigth: height * 0.07,
+            width: width * 0.9,
+            radius: 180,
+          ),
+          SizedBox(height: height * 0.015),
+          CustomButtonWidget(
+            colorButton: AppColors.premrayColor,
+            onPressd: () {
+              //ListOfCustomPromotion
+              context.pushNamed(AppRoutes.listOfCustomPromotion);
+            },
+            textButton: 'اشهاراتي حسب الطلب',
             textStyle: AppTextStyle.homebuttonStyle,
             heigth: height * 0.07,
             width: width * 0.9,

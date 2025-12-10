@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dz_pub/controllers/methods/api_methods/get_user_type_notifier.dart';
 import 'package:dz_pub/controllers/methods/api_methods/refresh_user_data_notifier.dart';
 import 'package:dz_pub/controllers/methods/api_methods/register_notifier.dart';
 import 'package:dz_pub/controllers/methods/hybrid_methods/drop_down_notifier.dart';
@@ -49,7 +50,8 @@ final refreshUserDataNotifier =
         (ref) => RefreshUserDataNotifier());
 
 
-
+ final getUserTypeNotifier = StateNotifierProvider<GetUserTypeNotifier, AuthState>(
+    (ref) => GetUserTypeNotifier());
 
 
 
@@ -287,8 +289,7 @@ final defaultImage = StateProvider<String>((ref) => ""
     "iANK2ceQ/article-cover_image-shrink_720_1280/article-cover_image-shrink"
     "_720_1280/0/1627292304016?e=2147483647&v=beta&t=CaGaKBl8DcF2tV6Ygjhe"
     "9uOPJdAc25Gis-KnOGC8G9E");
-final userTypeProvider = StateProvider<String>((ref) => "client");
-final selectedCountryCode = StateProvider<String>((ref) => "+970");
+    final selectedCountryCode = StateProvider<String>((ref) => "+970");
 final tokenOfUser = StateProvider<String>((ref) => "");
     final typeOfInfluencerProvider = StateProvider<String>((ref) => "");
 

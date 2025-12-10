@@ -194,6 +194,8 @@ void removeUserInfo() {
     PrefKeys.imageOfLicense,
     PrefKeys.inflSocialLinks,
     PrefKeys.inflCategories,
+    PrefKeys.inflDob,
+
   ];
 
   for (var key in keys) {

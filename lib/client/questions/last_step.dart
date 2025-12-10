@@ -11,7 +11,32 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LastStep extends ConsumerWidget {
   const LastStep({super.key});
+Future<void> sendPromotion({required WidgetRef ref,required BuildContext context}) async {
 
+  ref.read(showSnackBarNotifier.notifier)
+      .showNormalSnackBar(context: context,message: "",
+      isLoading: true);
+
+
+  await createPromotion(ref: ref);
+
+  debugPrint("the client id is ${NewSession.get(PrefKeys.id,
+      0)}");
+  debugPrint("notifier have error ? : ${ref.read
+    (promotionProvider).hasError}, message : ${ref.read
+    (promotionProvider).errorMessage}"
+
+      " ");
+  if(ref.read(promotionProvider).hasError){
+    ref.read(showSnackBarNotifier.notifier)
+        .showNormalSnackBar(context: context,message: "فشلت "
+        "علمية الإرسال، يرجى التأكد من صحة البيانات");
+  }else if(ref.read(promotionProvider).hasError == false){
+    ref.read(showSnackBarNotifier.notifier)
+        .showNormalSnackBar(context: context,message: "تم "
+        "إنشاء إشهارك بنجاح 🎉");
+  }
+}
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
@@ -19,6 +44,9 @@ class LastStep extends ConsumerWidget {
     final height = size.height;
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("خدمات المنصة"),
+        ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -42,27 +70,36 @@ class LastStep extends ConsumerWidget {
               SizedBox(height: height * 0.08),
               CustomButtonWidget(
                 onPressd: () async {
+
+
+
+                    ref.read(showSnackBarNotifier.notifier)
+                        .showNormalSnackBar(context: context,message: "",
+                        isLoading: true);
+
+
                   await createPromotion(ref: ref);
+
                   debugPrint("the client id is ${NewSession.get(PrefKeys.id,
                       0)}");
                   debugPrint("notifier have error ? : ${ref.read
                     (promotionProvider).hasError}, message : ${ref.read
                     (promotionProvider).errorMessage}"
 
-                      " ");
-                  if(ref.read(promotionProvider).hasError){
-                    ref.read(showSnackBarNotifier.notifier)
-                        .showNormalSnackBar(context: context,message: "فشلت "
-                        "علمية الإرسال، يرجى التأكد من صحة البيانات");
-                  }else if(ref.read(promotionProvider).hasError == false){
-                    ref.read(showSnackBarNotifier.notifier)
-                        .showNormalSnackBar(context: context,message: "تم "
-                        "إنشاء إشهارك بنجاح 🎉");
-                  }
+                        " ");
+                    if(ref.read(promotionProvider).hasError){
+                      ref.read(showSnackBarNotifier.notifier)
+                          .showNormalSnackBar(context: context,message: "فشلت "
+                          "علمية الإرسال، يرجى التأكد من صحة البيانات");
+                    }else if(ref.read(promotionProvider).hasError == false){
+                      ref.read(showSnackBarNotifier.notifier)
+                          .showNormalSnackBar(context: context,message: "تم "
+                          "إنشاء إشهارك بنجاح 🎉");
+                    }
                 },
                 textStyle: AppTextStyle.listTextStyle,
                 textButton: 'المواصلة مع الموافقة على خدمات المنصة',
-                heigth: height * 0.07,
+                heigth: height * 0.09,
                 width: width * 0.9,
                 radius: 180,
                 colorButton: AppColors.premrayColor,
@@ -70,20 +107,11 @@ class LastStep extends ConsumerWidget {
               SizedBox(height: height * 0.01),
               CustomButtonWidget(
                 onPressd: () async {
-                  await createPromotion(ref: ref);
-                  if(ref.read(promotionProvider).status == false){
-                    ref.read(showSnackBarNotifier.notifier)
-                        .showNormalSnackBar(context: context,message: "فشلت "
-                        "علمية الإرسال، يرجى التأكد من صحة البيانات");
-                  }else if(ref.read(promotionProvider).status){
-                    ref.read(showSnackBarNotifier.notifier)
-                        .showNormalSnackBar(context: context,message: "تم "
-                        "إنشاء إشهارك بنجاح 🎉");
-                  }
+                  await sendPromotion(ref: ref, context: context);
                 },
                 textStyle: AppTextStyle.listTextStyle,
                 textButton: 'المواصلة دون الحصول على خدمات المنصة',
-                heigth: height * 0.07,
+                heigth: height * 0.09,
                 width: width * 0.9,
                 radius: 180,
                 colorButton: AppColors.premrayColor,

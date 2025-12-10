@@ -79,6 +79,7 @@ Future<void> validateAndRegistration(
 
 
      );
+  await ref.read(getUserTypeNotifier.notifier).getUserType();
     await ref.read(registerNotifier.notifier).completeProfile(
     phone:ref.read(phoneController.notifier).state.text,
     identityNumber: ref.read(identityNumberController.notifier).state.text,

@@ -26,8 +26,8 @@ class LoginNotifier extends StateNotifier<AuthState> {
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       debugPrint("social media links of user ${body}");
-      ref?.read(userTypeProvider.notifier).state = NewSession.get(PrefKeys
-          .userType, 'client') ;
+
+
       return SocialMediaResponse.fromJson(body).links??[];
     } else {
       throw Exception("Failed to load social media links: ${response.statusCode}");
@@ -87,6 +87,7 @@ Future<void> getCategoriesAndSocialMediaLinksOfInfluencer(int influencerId)async
         debugPrint("Token: ${user.token}");
         debugPrint("Type ID: ${user.typeId}");
         saveUserInfo(res);
+
         state = state.copyWith(isLoading: false);
         NewSession.save(PrefKeys.logged, "OK");
         debugPrint("NewSession of is have cr ${NewSession.get(PrefKeys.isHaveCr, "")}");
@@ -99,18 +100,15 @@ Future<void> getCategoriesAndSocialMediaLinksOfInfluencer(int influencerId)async
             (PrefKeys.id, 0),ref:  ref);
 
         state = state.copyWith(categories: _getCategoriesOfInfluencer
-          (NewSession.get
-            (PrefKeys.id, 0),ref:  ref),socialMediaLinks:
+          (NewSession.get(PrefKeys.id, 0),ref:  ref),socialMediaLinks:
         _getSocialMediaLinksOfInfluencer(NewSession.get
             (PrefKeys.id, 0),ref:  ref));
         debugPrint("state of categories ${state.categories}");
         debugPrint("here get Categories influencer method done !!!!!");
-
-
        }
-        debugPrint("categories of user provider  ${ref.read
-          (categoriesOfInfluencer
-            .notifier).state}");
+        state = state.copyWith(userType: user.typeId == 1 ? "client":"influencer" );
+        debugPrint("client is status ${user.typeId == 1 ? "client":"influence"
+            "r" }");
         return user;
 
       } else {

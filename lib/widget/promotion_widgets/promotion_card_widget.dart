@@ -1,5 +1,5 @@
 import 'package:dz_pub/api/promations_models/promotions.dart';
-import 'package:dz_pub/client/screens/client/list_of_client_promotions.dart';
+import 'package:dz_pub/client/screens/client/list_of_promotions_ui.dart';
 import 'package:dz_pub/core/styling/App_colors.dart';
 import 'package:dz_pub/widget/Custom_Button_Widget.dart';
 import 'package:flutter/material.dart';

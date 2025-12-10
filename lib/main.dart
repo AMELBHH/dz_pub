@@ -21,9 +21,10 @@ void main()async  {
   await NewSession.init();
   await configureInjection();
   //NewSession.save(PrefKeys.userType, 'client');
-  //removeUserInfo();
+ // removeUserInfo();
 debugPrint("NewSession.userType ${NewSession.get(PrefKeys.userType, '')}");
   runApp(ProviderScope(
+
       overrides: [
       languageProvider.overrideWith(
       (ref) => LanguageNotifier(initialLocale),

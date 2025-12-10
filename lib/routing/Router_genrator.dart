@@ -1,14 +1,15 @@
 import 'package:dz_pub/client/questions/last_step.dart';
 
 import 'package:dz_pub/client/questions/CustomDropdownQuestion.dart';
-import 'package:dz_pub/client/screens/client/Custom_promotion.dart';
+import 'package:dz_pub/client/screens/client/Custom_promotion_ui.dart';
 
-import 'package:dz_pub/client/screens/client/Influencer_profile_details.dart';
-import 'package:dz_pub/client/screens/client/List_of_influencers.dart';
-import 'package:dz_pub/client/screens/client/List_of_influencers_by_niche.dart';
+import 'package:dz_pub/client/screens/client/Influencer_profile_details_ui.dart';
+import 'package:dz_pub/client/screens/client/List_of_influencers_ui.dart';
+import 'package:dz_pub/client/screens/client/List_of_influencers_by_niche_ui.dart';
 import 'package:dz_pub/client/screens/client/Platform_services.dart';
-import 'package:dz_pub/client/screens/client/client_home_screen.dart';
-import 'package:dz_pub/client/screens/client/list_of_client_promotions.dart';
+import 'package:dz_pub/client/screens/client/client_home_ui.dart';
+import 'package:dz_pub/client/screens/client/list_of_custom_promotion_ui.dart';
+import 'package:dz_pub/client/screens/client/list_of_promotions_ui.dart';
 import 'package:dz_pub/client/screens/intro_screen/client/first_intro_client.dart';
 import 'package:dz_pub/client/screens/intro_screen/client/second_intro_client.dart';
 import 'package:dz_pub/client/screens/intro_screen/client/third_intro_client.dart';
@@ -34,6 +35,10 @@ class RouterGenrator {
         name: AppRoutes.userTypeQuestionScreen,
         path: AppRoutes.userTypeQuestionScreen,
         builder: (context, statc) => const UserTypeQuestionScreen(),
+      ),      GoRoute(
+        name: AppRoutes.listOfCustomPromotion,
+        path: AppRoutes.listOfCustomPromotion,
+        builder: (context, statc) => const ListOfCustomPromotion(),
       ),
 
       GoRoute(
@@ -118,9 +123,9 @@ class RouterGenrator {
         builder: (context, state) => const PromotionDetailsScreen(),
       ),
       GoRoute(
-        name: AppRoutes.listOfClientPromotions,
-        path: AppRoutes.listOfClientPromotions,
-        builder: (context, state) => const ListOfClientPromotions(),
+        name: AppRoutes.listOfPromotions,
+        path: AppRoutes.listOfPromotions,
+        builder: (context, state) => const ListOfPromotions(),
       ),
       GoRoute(
         path: AppRoutes.platformServices,

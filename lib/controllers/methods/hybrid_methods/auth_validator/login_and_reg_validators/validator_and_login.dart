@@ -57,6 +57,9 @@ void    validateAndLogin(WidgetRef ref, BuildContext context) async {
   await ref
       .read(loginNotifier.notifier)
       .login(emailControllerValue, passwordControllerValue, ref,context);
+
+
+
   if (errorEmail != "no error have" || errorPassword != "no error have") {
     return;
   }
