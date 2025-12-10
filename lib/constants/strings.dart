@@ -21,9 +21,11 @@ class ServerLocalDiv {
 
 //Localhost for Emulator
 class   ServerLocalhostEm {
+  static String storagePath = "http://192.168.2.4:8000/storage/";
   static String server = "http://192.168.2.4:8000/api/";
   static String seedGet = "${server}seed/get/";
   static String seedAdd = "${server}seed/add";
+  static String getLastPromotion = "${server}get/last-promotion-by-influencer";
   static String getCustomPromotion = "${seedGet}custom-promotion";
   static String createPromotion = "${server}add/promation";
   static String createCustomPromotion = "$seedAdd/custom-promotion";

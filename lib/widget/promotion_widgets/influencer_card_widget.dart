@@ -1,4 +1,5 @@
 import 'package:dz_pub/api/users.dart';
+import 'package:dz_pub/client/screens/client/Influencer_profile_details_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dz_pub/widget/promotion_widgets/card_container_widget.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,19 @@ class _InfluencerInfoCardState extends State<InfluencerInfoCard> {
           Text("التصنيف: ${influencer?.typeId  == 1 ? "معنوي": ""
               "طبيعي" }"),
           Text("التقييم: ${influencer?.rating ?? '--'}"),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+
+              //show detials of influncer
+              Spacer(),
+              TextButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)
+                => InfluencerProfileDetails(influencer: user,)));
+              }, child: Text("المزيد عن المؤثر"))
+            ],
+          )
+
         ],
       ),
     );

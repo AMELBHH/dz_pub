@@ -46,7 +46,7 @@ class InfluencerHomeButtons extends ConsumerWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      ListOfPromotions(statusId:4,title:"إشهارات قيد التسليم"),
+                          ListOfPromotions(statusId:4,title:"إشهارات قيد التسليم"),
                 ),
               );
             },

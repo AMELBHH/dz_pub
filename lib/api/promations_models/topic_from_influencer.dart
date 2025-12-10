@@ -1,7 +1,7 @@
 class TopicFromInfluencer {
   final int id;
   final String haveSample;
-  final String detials;
+  final String      detials;
   final int promationId;
 
   TopicFromInfluencer({

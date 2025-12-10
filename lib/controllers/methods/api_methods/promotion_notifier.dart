@@ -331,4 +331,28 @@ debugPrint("tipick is Ready ???? ------>$topicIsReady");
       );
     }
   }
+
+
+  Future<Promotion> getLastPromotionByInfluencer(int influencerId) async {
+    final url = Uri.parse(
+      "${ServerLocalhostEm.getLastPromotion}?influencer_id=$influencerId",
+    );
+
+    final response = await http.get(url);
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to load last promotion");
+    }
+
+    final body = jsonDecode(response.body);
+
+    if (body["status"] != true) {
+      throw Exception(body["message"] ?? "Unknown error");
+    }
+
+    // Convert promotion JSON to model
+    return Promotion.fromJson(body["promotion"]);
+  }
+
+
 }

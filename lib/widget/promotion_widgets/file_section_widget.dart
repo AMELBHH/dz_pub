@@ -1,12 +1,15 @@
 import 'package:dz_pub/api/promations_models/topic_already_ready.dart';
+import 'package:dz_pub/constants/strings.dart';
+import 'package:dz_pub/widget/promotion_widgets/card_container_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:dz_pub/api/promations_models/promotions.dart';
 import 'package:video_player/video_player.dart';
 
 class FilesSection extends StatelessWidget {
-  final Promotion promotion;
+  final Promotion ?promotion;
+  final String ?typeName;
 
-  const FilesSection({super.key, required this.promotion});
+  const FilesSection({super.key,  this.promotion,this.typeName});
 
   bool _isImage(String path) {
     return path.endsWith(".jpg") ||
@@ -21,22 +24,19 @@ class FilesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<TopicAlreadyReady> files = promotion.topicAlreadyReadies ?? [];
+    final List<TopicAlreadyReady> files = promotion?.topicAlreadyReadies ?? [];
 
     if (files.isEmpty) return const SizedBox();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16),
-        const Text(
-          "الملفات",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 12),
+
 
         ...files.map((file) {
-          final fileUrl = "http://YOUR_DOMAIN/${file.filePath}"; // عدل الدومين
+          final fileUrl = "${ServerLocalhostEm.storagePath}${file
+              .filePath}"; // عدل الدومين
+          debugPrint("file url : $fileUrl");
 
           if (_isImage(file.filePath)) {
             return Padding(
@@ -102,31 +102,34 @@ class _VideoPlayerWidgetState extends State<_VideoPlayerWidget> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return AspectRatio(
-      aspectRatio: controller.value.aspectRatio,
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          VideoPlayer(controller),
-          VideoProgressIndicator(controller, allowScrubbing: true),
-          Positioned(
-            bottom: 8,
-            left: 8,
-            child: IconButton(
-              icon: Icon(
-                controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                color: Colors.white,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: AspectRatio(
+        aspectRatio: controller.value.aspectRatio,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            VideoPlayer(controller),
+            VideoProgressIndicator(controller, allowScrubbing: true),
+            Positioned(
+              bottom: 8,
+              left: 8,
+              child: IconButton(
+                icon: Icon(
+                  controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    controller.value.isPlaying
+                        ? controller.pause()
+                        : controller.play();
+                  });
+                },
               ),
-              onPressed: () {
-                setState(() {
-                  controller.value.isPlaying
-                      ? controller.pause()
-                      : controller.play();
-                });
-              },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

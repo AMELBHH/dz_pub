@@ -10,6 +10,7 @@ import 'package:dz_pub/client/screens/client/Platform_services.dart';
 import 'package:dz_pub/client/screens/client/client_home_ui.dart';
 import 'package:dz_pub/client/screens/client/list_of_custom_promotion_ui.dart';
 import 'package:dz_pub/client/screens/client/list_of_promotions_ui.dart';
+import 'package:dz_pub/client/screens/client/promotion_detials_ui.dart';
 import 'package:dz_pub/client/screens/intro_screen/client/first_intro_client.dart';
 import 'package:dz_pub/client/screens/intro_screen/client/second_intro_client.dart';
 import 'package:dz_pub/client/screens/intro_screen/client/third_intro_client.dart';
@@ -120,7 +121,7 @@ class RouterGenrator {
       GoRoute(
         name: AppRoutes.promotionDetails,
         path: AppRoutes.promotionDetails,
-        builder: (context, state) => const PromotionDetailsScreen(),
+        builder: (context, state) => const        PromotionDetailsScreen(),
       ),
       GoRoute(
         name: AppRoutes.listOfPromotions,

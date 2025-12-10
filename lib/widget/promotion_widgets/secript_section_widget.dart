@@ -4,15 +4,15 @@ import 'package:dz_pub/widget/promotion_widgets/card_container_widget.dart';
 
 class ScriptSection extends StatelessWidget {
   final Promotion ?promotion;
-
-  const ScriptSection({super.key,  this.promotion});
+  final String ?typeName;
+  const ScriptSection({super.key,  this.promotion,this.typeName});
 
   @override
   Widget build(BuildContext context) {
 
 
     return CardContainer(
-      title: "النص المطلوب",
+      title: "نص $typeName"?? "النص المطلوب",
       child: Text(promotion?.requirements??""),
     );
   }

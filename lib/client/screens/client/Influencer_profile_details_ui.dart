@@ -1,6 +1,9 @@
+import 'package:dz_pub/api/promations_models/promotions.dart';
 import 'package:dz_pub/api/users.dart';
+import 'package:dz_pub/controllers/providers/promotion_provider.dart';
 import 'package:dz_pub/core/styling/App_colors.dart';
 import 'package:dz_pub/view/authorization_ui/widgets/profile_widgets/defult_profile_image.dart';
+import 'package:dz_pub/widget/promotion_widgets/file_section_widget.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'package:dz_pub/core/styling/App_text_style.dart';
@@ -27,11 +30,21 @@ class _InfluencerProfileDetailsState
     return rating == 0 ? "لا يوجد تقييمات": '⭐' * count;               //
     // repeat the star emoji
   }
+    Promotion ?promotion;
 @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     debugPrint("social mideia link : ${widget.influencer?.influencer?.socialMediaLinks}");
-  }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final result = await ref
+          .read(promotionProvider.notifier)
+          .getLastPromotionByInfluencer(widget.influencer?.id ?? 0);
+
+      setState(() {
+        promotion = result;
+      });
+    });
+}
   @override
   Widget build(BuildContext context) {
     final createdAtString = widget.influencer?.createdAt?? "";
@@ -274,8 +287,15 @@ class _InfluencerProfileDetailsState
                           style: AppTextStyle.titel,
                         ),
                         SizedBox(height: height * 0.015),
-                        Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQCRSq6q-N86Jaj8byHfh5kScct5ic_FbcTQ&s'),
-                        Text('محاكمة المؤثرين.. نوميديا لزول تفقد الوعي بعد سماعها لالتماسات النيابة' ,style: AppTextStyle.descriptionText,)
+
+                      FilesSection(promotion: promotion),
+
+                        ref.read(promotionProvider).isLoading ?
+
+                            CircularProgressIndicator()
+                            : Text(promotion
+                            ?.requirements??"" ,style:
+                        AppTextStyle.descriptionText,)
 
                       ],
                     ),
