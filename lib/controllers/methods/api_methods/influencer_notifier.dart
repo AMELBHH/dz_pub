@@ -13,7 +13,9 @@ class InfluencerNotifier extends StateNotifier<InfluencerState> {
 
   Future<User> _getUserById(int id) async {
     final response = await http.get(Uri.parse("${ServerLocalhostEm
-        .getInfluencerById}?id=$id"));
+        .getInfluencerById}?id=$id"),
+
+    );
     if (response.statusCode != 200) {
       throw Exception("Failed to load user");
     }
@@ -48,6 +50,9 @@ class InfluencerNotifier extends StateNotifier<InfluencerState> {
     final response = await http.get(uri);
 
     debugPrint("res $categoryId");
+    debugPrint("STATUS: ${response.statusCode}");
+    debugPrint("HEADERS: ${response.headers}");
+    debugPrint("BODY: ${response.body.substring(0, 300)}");
 
     if (response.statusCode != 200) {
       throw Exception("Failed to load influencers");

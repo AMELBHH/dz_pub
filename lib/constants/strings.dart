@@ -21,8 +21,8 @@ class ServerLocalDiv {
 
 //Localhost for Emulator
 class   ServerLocalhostEm {
-  static String storagePath = "http://192.168.2.4:8000/storage/";
-  static String server = "http://192.168.2.4:8000/api/";
+  static String storagePath = "https://polishedly-bouncy-jerry.ngrok-free.dev/storage/";
+  static String server = "https://polishedly-bouncy-jerry.ngrok-free.dev/api/";
   static String seedGet = "${server}seed/get/";
   static String seedAdd = "${server}seed/add";
   static String getLastPromotion = "${server}get/last-promotion-by-influencer";
