@@ -1,12 +1,12 @@
 import 'package:dz_pub/client/questions/last_step.dart';
 
-import 'package:dz_pub/client/questions/CustomDropdownQuestion.dart';
-import 'package:dz_pub/client/screens/client/Custom_promotion_ui.dart';
+import 'package:dz_pub/client/questions/custom_dropdown_question.dart';
+import 'package:dz_pub/client/screens/client/custom_promotion_ui.dart';
 
-import 'package:dz_pub/client/screens/client/Influencer_profile_details_ui.dart';
-import 'package:dz_pub/client/screens/client/List_of_influencers_ui.dart';
-import 'package:dz_pub/client/screens/client/List_of_influencers_by_niche_ui.dart';
-import 'package:dz_pub/client/screens/client/Platform_services.dart';
+import 'package:dz_pub/client/screens/client/influencer_profile_details_ui.dart';
+import 'package:dz_pub/client/screens/client/list_of_influencers_ui.dart';
+import 'package:dz_pub/client/screens/client/list_of_influencers_by_niche_ui.dart';
+import 'package:dz_pub/client/screens/client/platform_services.dart';
 import 'package:dz_pub/client/screens/client/client_home_ui.dart';
 import 'package:dz_pub/client/screens/client/list_of_custom_promotion_ui.dart';
 import 'package:dz_pub/client/screens/client/list_of_promotions_ui.dart';
@@ -21,13 +21,19 @@ import 'package:dz_pub/client/screens/intro_screen/user_type_question.dart';
 import 'package:dz_pub/constants/strings.dart';
 import 'package:dz_pub/routing/App_routes.dart';
 import 'package:dz_pub/session/new_session.dart';
+import 'package:dz_pub/view/admin_ui/report_management_ui.dart';
+import 'package:dz_pub/view/admin_ui/admin_home_ui.dart';
+import 'package:dz_pub/view/admin_ui/account_management/account_list_ui.dart';
+import 'package:dz_pub/view/admin_ui/account_management/user_details_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class RouterGenrator {
   static GoRouter mainRouttingInourApp = GoRouter(
     errorBuilder: (context, statc) => Scaffold(body: Text('NNNNNN ')),
-    initialLocation: NewSession.get(PrefKeys.userType, '') != ''
+    initialLocation: NewSession.get(PrefKeys.userType, '') == 'admin'
+        ? AppRoutes.adminHomeScreen
+        : NewSession.get(PrefKeys.userType, '') != ''
         ? AppRoutes.homeScreen
         : AppRoutes.userTypeQuestionScreen,
 
@@ -36,7 +42,8 @@ class RouterGenrator {
         name: AppRoutes.userTypeQuestionScreen,
         path: AppRoutes.userTypeQuestionScreen,
         builder: (context, statc) => const UserTypeQuestionScreen(),
-      ),      GoRoute(
+      ),
+      GoRoute(
         name: AppRoutes.listOfCustomPromotion,
         path: AppRoutes.listOfCustomPromotion,
         builder: (context, statc) => const ListOfCustomPromotion(),
@@ -81,12 +88,12 @@ class RouterGenrator {
         path: AppRoutes.homeScreen,
         builder: (context, statc) => const HomeScreen(),
       ),
+
       // GoRoute(
       //   name: AppRoutes.influencersHomeScreen,
       //   path: AppRoutes.influencersHomeScreen,
       //   builder: (context, statc) => const InfluencersHome(),
       // ),
-
       GoRoute(
         path: AppRoutes.listOfInfluencers,
         name: AppRoutes.listOfInfluencers,
@@ -100,7 +107,7 @@ class RouterGenrator {
       GoRoute(
         name: AppRoutes.dynamicQuestionScreen,
         path: AppRoutes.dynamicQuestionScreen,
-          builder: (context, state) => DynamicQuestionScreen(),
+        builder: (context, state) => DynamicQuestionScreen(),
       ),
 
       GoRoute(
@@ -121,7 +128,7 @@ class RouterGenrator {
       GoRoute(
         name: AppRoutes.promotionDetails,
         path: AppRoutes.promotionDetails,
-        builder: (context, state) => const        PromotionDetailsScreen(),
+        builder: (context, state) => const PromotionDetailsScreen(),
       ),
       GoRoute(
         name: AppRoutes.listOfPromotions,
@@ -132,6 +139,29 @@ class RouterGenrator {
         path: AppRoutes.platformServices,
         name: AppRoutes.platformServices,
         builder: (context, state) => PlatformServices(),
+      ),
+      GoRoute(
+        path: AppRoutes.adminHomeScreen,
+        name: AppRoutes.adminHomeScreen,
+        builder: (context, state) => const AdminHomeScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.reportManagement,
+        name: AppRoutes.reportManagement,
+        builder: (context, state) => const ReportManagementScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.accountManagement,
+        name: AppRoutes.accountManagement,
+        builder: (context, state) => const AccountListScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.userDetails,
+        name: AppRoutes.userDetails,
+        builder: (context, state) {
+          final userId = state.extra as int;
+          return UserDetailsScreen(userId: userId);
+        },
       ),
     ],
   );

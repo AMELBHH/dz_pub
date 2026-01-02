@@ -1,5 +1,5 @@
 import 'package:dz_pub/api/users.dart';
-import 'package:dz_pub/client/screens/client/Influencer_profile_details_ui.dart';
+import 'package:dz_pub/client/screens/client/influencer_profile_details_ui.dart';
 import 'package:dz_pub/constants/strings.dart';
 import 'package:dz_pub/controllers/providers/influencer_provider.dart';
 import 'package:dz_pub/controllers/providers/promotion_provider.dart';

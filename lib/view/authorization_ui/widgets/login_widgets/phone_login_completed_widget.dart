@@ -15,9 +15,9 @@ class EmailLoginCompletedWidget extends ConsumerWidget {
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
         child: ContainerFieldWidget(
           autoFocus: true,
-          // errorText: ref.watch(formFieldsProvider)['phone']?.error,
+          errorText: ref.watch(formFieldsNotifier)['email']?.error,
           validator: (value) {
-            return ref.read(formFieldsNotifier)['email']?.error;
+            return ref.watch(formFieldsNotifier)['email']?.error;
           },
           // onChanged: (value){
           //
@@ -26,13 +26,11 @@ class EmailLoginCompletedWidget extends ConsumerWidget {
           //
           // },
           hintMaxLines: 1,
-          title:"الإيميل"
+          title: "الإيميل",
           //   SetLocalization.of(context)!.getTranslateValue("phone_number")
-            ,
           controller: ref.read(emailLoginController),
-          hintInput:"أدخل الإيميل الخاص بك"
+          hintInput: "أدخل الإيميل الخاص بك",
           //     SetLocalization.of(context)!.getTranslateValue("enter_number_with_country_code")
-          ,
           inputType: TextInputType.emailAddress,
         ),
       ),

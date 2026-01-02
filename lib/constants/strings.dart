@@ -1,5 +1,4 @@
-
-  class ServerLocalhost {
+class ServerLocalhost {
   static String server = "http://localhost:8000/api/";
 
   static String userLogin = "${server}user/login";
@@ -20,8 +19,9 @@ class ServerLocalDiv {
 }
 
 //Localhost for Emulator
-class   ServerLocalhostEm {
-  static String storagePath = "https://polishedly-bouncy-jerry.ngrok-free.dev/storage/";
+class ServerLocalhostEm {
+  static String storagePath =
+      "https://polishedly-bouncy-jerry.ngrok-free.dev/storage/";
   static String server = "https://polishedly-bouncy-jerry.ngrok-free.dev/api/";
   static String seedGet = "${server}seed/get/";
   static String seedAdd = "${server}seed/add";
@@ -31,24 +31,37 @@ class   ServerLocalhostEm {
   static String createCustomPromotion = "$seedAdd/custom-promotion";
   static String getUserType = "${seedGet}user-type";
   static String getPromotionsOfClient = "${server}get/promation";
-  static String   getPromotionsByStatus = "${server}get/promation-by-status";
+  static String getPromotionsByStatus = "${server}get/promation-by-status";
 
   static String getInfluencersByCategory = "${seedGet}influencer-category";
-    static String getInfluencerById = "${seedGet}influencer";
-    static String getAllInfluencers = "${seedGet}influencers";
+  static String getInfluencerById = "${seedGet}influencer";
+  static String getAllInfluencers = "${seedGet}influencers";
+  static String getUsers = "${seedGet}users";
+  static String getInactiveUsers = "${seedGet}inactive-users";
+  static String getUnverifiedUsers = "${seedGet}unverified-users";
+  static String getUserById = "${seedGet}user-by-id";
   static String getCategories = "${seedGet}category";
   // static String postAll = "${server}post/all";
-  static String socialMediaOfIn = "${server}get-social-media-links-by-influencer";
+  static String socialMediaOfIn =
+      "${server}get-social-media-links-by-influencer";
   static String categoriesOfInf = "${server}get-categories-by-influencer";
   static String userLogin = "${server}auth/login";
   static String register = "${server}auth/register";
   static String completeProfile = "${server}auth/complete-profile";
   static String addSocialMedia = "${server}auth/add-social-media-links";
   static String addCategories = "${server}auth/assign-categories";
+
+  // Reports
+  static String getReports = "${server}seed/get/reports";
+  static String getReportsByStatus = "${server}seed/get/reports-by-status";
+  static String updateReportStatus = "${server}seed/update/report-status";
+  static String addReport = "${server}seed/add/report";
+  static String updateUserStatus = "${server}seed/update/user-status";
+  static String updateUserVerification = "${server}seed/update/verify";
   //for test
 }
 
-class   PrefKeys {
+class PrefKeys {
   static const String userType = '';
   static const String userTypeId = 'user_type_id';
   static const String phone = 'phone';
@@ -69,7 +82,7 @@ class   PrefKeys {
   static const String nickName = 'nickName';
   static const String gender = 'gender';
   static const String birthday = 'birthday';
-// Influencer
+  // Influencer
   static const String inflRating = 'infl_rating';
   static const String inflBio = 'infl_bio';
   static const String inflGender = 'infl_gender';
@@ -78,7 +91,7 @@ class   PrefKeys {
   static const String inflDob = 'infl_dob';
   static const String inflSocialLinks = 'infl_social_links';
   static const String inflCategories = 'infl_categories';
-// Client
+  // Client
   static const String isHaveCr = 'is_have_cr';
   static const String regOwnerName = 'reg_owner_name';
   static const String institutionName = 'institution_name';
@@ -89,10 +102,8 @@ class   PrefKeys {
   static const String nifNumber = 'nif_number';
   static const String iban = 'iban';
   static const String imageOfLicense = 'image_of_license';
-  static const String identityNumber = 'identity_number'  ;
+  static const String identityNumber = 'identity_number';
   static const String identityImage = 'identity_image';
   static const String profileImage = 'profile_image';
   static const String isVerified = 'is_verified';
-
-
 }

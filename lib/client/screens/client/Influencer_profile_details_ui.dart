@@ -2,6 +2,8 @@ import 'package:dz_pub/api/promations_models/promotions.dart';
 import 'package:dz_pub/api/users.dart';
 import 'package:dz_pub/controllers/providers/promotion_provider.dart';
 import 'package:dz_pub/core/styling/App_colors.dart';
+import 'package:dz_pub/session/new_session.dart';
+import 'package:dz_pub/constants/strings.dart';
 import 'package:dz_pub/view/authorization_ui/widgets/profile_widgets/defult_profile_image.dart';
 import 'package:dz_pub/widget/promotion_widgets/file_section_widget.dart';
 import 'package:intl/intl.dart' as intl;
@@ -9,6 +11,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:dz_pub/core/styling/App_text_style.dart';
 import 'package:dz_pub/routing/App_routes.dart';
 import 'package:dz_pub/widget/Custom_Button_Widget.dart';
+import 'package:dz_pub/client/screens/client/widgets/report_dialog.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class InfluencerProfileDetails extends ConsumerStatefulWidget {
   const InfluencerProfileDetails({super.key, this.influencer});
-final User ?influencer;
+  final User? influencer;
   @override
   ConsumerState createState() => _InfluencerProfileDetailsState();
 }
@@ -26,15 +29,18 @@ final User ?influencer;
 class _InfluencerProfileDetailsState
     extends ConsumerState<InfluencerProfileDetails> {
   String buildStars(double rating) {
-    int count = rating.toInt();       // convert double → int
-    return rating == 0 ? "لا يوجد تقييمات": '⭐' * count;               //
+    int count = rating.toInt(); // convert double → int
+    return rating == 0 ? "لا يوجد تقييمات" : '⭐' * count; //
     // repeat the star emoji
   }
-    Promotion ?promotion;
-@override
+
+  Promotion? promotion;
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    debugPrint("social mideia link : ${widget.influencer?.influencer?.socialMediaLinks}");
+    debugPrint(
+      "social mideia link : ${widget.influencer?.influencer?.socialMediaLinks}",
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final result = await ref
           .read(promotionProvider.notifier)
@@ -44,10 +50,11 @@ class _InfluencerProfileDetailsState
         promotion = result;
       });
     });
-}
+  }
+
   @override
   Widget build(BuildContext context) {
-    final createdAtString = widget.influencer?.createdAt?? "";
+    final createdAtString = widget.influencer?.createdAt ?? "";
     String formattedCreatedAt = '';
     if (createdAtString.isNotEmpty) {
       try {
@@ -66,28 +73,45 @@ class _InfluencerProfileDetailsState
     final height = size.height;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: Text('ابدء اشهارك الان'),
+        appBar: AppBar(
+          title: Text('ابدء اشهارك الان'),
           actions: [
             PopupMenuButton<String>(
               icon: const Icon(Icons.menu),
-              onSelected: (value) {},
+              onSelected: (value) {
+                if (value == 'report') {
+                  final int userId = NewSession.get(PrefKeys.id, 0);
+                  if (userId == 0) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('يرجى تسجيل الدخول لتتمكن من الإبلاغ'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) =>
+                          ReportDialog(reportedId: widget.influencer?.id ?? 0),
+                    );
+                  }
+                }
+              },
               itemBuilder: (BuildContext context) {
                 return [
                   PopupMenuItem<String>(
                     value: 'block',
-                    child: Text(' حظر',style: AppTextStyle.descriptionText),
+                    child: Text(' حظر', style: AppTextStyle.descriptionText),
                   ),
                   PopupMenuItem<String>(
                     value: 'report',
-                    child: Text(' إبلاغ',style: AppTextStyle.descriptionText),
+                    child: Text(' إبلاغ', style: AppTextStyle.descriptionText),
                   ),
                 ];
               },
             ),
           ],
         ),
-
-
         body: SingleChildScrollView(
           child: Stack(
             children: [
@@ -96,46 +120,22 @@ class _InfluencerProfileDetailsState
                   SizedBox(height: height * 0.23),
                   Center(
                     child: Text(
-                      widget.influencer?.name?? "بدون اسم",
+                      widget.influencer?.name ?? "بدون اسم",
                       style: AppTextStyle.premaryLineStyle,
                     ),
                   ),
                   SizedBox(height: height * 0.02),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //   children: [
-                  //     Column(
-                  //       children: [
-                  //         Text('49k', style: AppTextStyle.textpurpal),
-                  //         Text('المتابعون', style: AppTextStyle.titel),
-                  //       ],
-                  //     ),
-                  //     Column(
-                  //       children: [
-                  //         Text('49k', style: AppTextStyle.textpurpal),
-                  //         Text('الاعمال', style: AppTextStyle.titel),
-                  //       ],
-                  //     ),
-                  //     Column(
-                  //       children: [
-                  //         Text('49k', style: AppTextStyle.textpurpal),
-                  //         Text('المتابعون', style: AppTextStyle.titel),
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
                   SizedBox(height: height * 0.03),
 
                   Container(
                     padding: EdgeInsets.all(18),
-
                     margin: EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
                       color: AppColors.premrayColor2,
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 6,
                           offset: const Offset(0, 4),
                         ),
@@ -144,8 +144,7 @@ class _InfluencerProfileDetailsState
                     child: Column(
                       children: [
                         RowWidet(
-                          description:"لا يوجد أوسمة",
-                          //"سفير المنصة لمجال الفن سنة 2024",
+                          description: "لا يوجد أوسمة",
                           title: 'الاوسمة :',
                         ),
                         SizedBox(height: height * 0.015),
@@ -155,21 +154,20 @@ class _InfluencerProfileDetailsState
                         ),
                         SizedBox(height: height * 0.015),
                         RowWidet(
-                            description:
-
-                            buildStars(widget.influencer?.influencer?.rating ?? 0),
-                          title: 'تقييم :'),
-                        // RowWidet(description: '⭐⭐⭐', title: 'تقييم :'),
-                         SizedBox(height: height * 0.015),
+                          description: buildStars(
+                            widget.influencer?.influencer?.rating ?? 0,
+                          ),
+                          title: 'تقييم :',
+                        ),
+                        SizedBox(height: height * 0.015),
                         RowWidet(
-                          description: widget.influencer?.influencer?.categories?.map((c) => c.name).join(", ")?? "",
+                          description:
+                              widget.influencer?.influencer?.categories
+                                  ?.map((c) => c.name)
+                                  .join(", ") ??
+                              "",
                           title: 'المجالات:',
                         ),
-                        // SizedBox(height: height * 0.015),
-                        // RowWidet(
-                        //   description: 'الغناء ,التمثيل ,الموضة',
-                        //   title: 'المجالات الثانوية :',
-                        // ),
                         SizedBox(height: height * 0.015),
                       ],
                     ),
@@ -178,14 +176,13 @@ class _InfluencerProfileDetailsState
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(18),
-
                     margin: EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
                       color: AppColors.premrayColor2,
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 6,
                           offset: const Offset(0, 4),
                         ),
@@ -194,12 +191,12 @@ class _InfluencerProfileDetailsState
                     child: Column(
                       children: [
                         Text(
-                          "نبذة عن :${widget.influencer?.name??''}",
+                          "نبذة عن :${widget.influencer?.name ?? ''}",
                           style: AppTextStyle.titel,
                         ),
                         SizedBox(height: height * 0.015),
                         Text(
-                          widget.influencer?.influencer?.bio?? "",
+                          widget.influencer?.influencer?.bio ?? "",
                           style: AppTextStyle.descriptionText,
                         ),
                       ],
@@ -209,14 +206,13 @@ class _InfluencerProfileDetailsState
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(18),
-
                     margin: EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
                       color: AppColors.premrayColor2,
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 6,
                           offset: const Offset(0, 3),
                         ),
@@ -226,55 +222,38 @@ class _InfluencerProfileDetailsState
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          " حسابات: ${widget.influencer?.name??''}",
+                          " حسابات: ${widget.influencer?.name ?? ''}",
                           style: AppTextStyle.titel,
                         ),
-
                         Column(
                           children:
-
-
-                          widget.influencer?.influencer?.socialMediaLinks
-                              ?.map((social) {
-
-
-
-                            return
-                              buildSocialTile(
-
-                              id: social.socialMediaId??0, // safe because we
-                                // checked
-                              // above
-                              url: social.url??"no soical",
-
-                              name: widget.influencer?.name ?? 'any thing',
-                            );
-                          }).toList() ??
-                              [
-                                const SizedBox(
-                                  child: Text("no social"),
-                                ),
-                              ],
-                        )
-
+                              widget.influencer?.influencer?.socialMediaLinks
+                                  ?.map((social) {
+                                    return buildSocialTile(
+                                      id: social.socialMediaId ?? 0,
+                                      url: social.url ?? "no soical",
+                                      name:
+                                          widget.influencer?.name ??
+                                          'any thing',
+                                    );
+                                  })
+                                  .toList() ??
+                              [const SizedBox(child: Text("no social"))],
+                        ),
                       ],
                     ),
-
                   ),
-
-
 
                   SizedBox(height: height * 0.02),
                   Container(
                     padding: EdgeInsets.all(18),
-
                     margin: EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
                       color: AppColors.premrayColor2,
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 6,
                           offset: const Offset(0, 4),
                         ),
@@ -282,29 +261,18 @@ class _InfluencerProfileDetailsState
                     ),
                     child: Column(
                       children: [
-                        Text(
-                          'بعض الاعمال',
-                          style: AppTextStyle.titel,
-                        ),
+                        Text('بعض الاعمال', style: AppTextStyle.titel),
                         SizedBox(height: height * 0.015),
-
-                      FilesSection(promotion: promotion),
-
-                        ref.read(promotionProvider).isLoading ?
-
-                            CircularProgressIndicator()
-                            : Text(promotion
-                            ?.requirements??"" ,style:
-                        AppTextStyle.descriptionText,)
-
+                        FilesSection(promotion: promotion),
+                        ref.read(promotionProvider).isLoading
+                            ? CircularProgressIndicator()
+                            : Text(
+                                promotion?.requirements ?? "",
+                                style: AppTextStyle.descriptionText,
+                              ),
                       ],
                     ),
                   ),
-
-
-
-
-
 
                   SizedBox(height: height * 0.02),
                   Padding(
@@ -316,16 +284,12 @@ class _InfluencerProfileDetailsState
                       },
                       textButton: 'ابدء اشهارك الان',
                       textStyle: AppTextStyle.homebuttonStyle,
-
-                      heigth: height*0.06,
-                      // width: width*0.5,
+                      heigth: height * 0.06,
                       radius: 180,
                     ),
                   ),
-
                 ],
               ),
-
               Positioned(
                 child: Container(
                   height: height * 0.14,
@@ -347,7 +311,6 @@ class _InfluencerProfileDetailsState
                     Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-
                         border: Border.all(
                           color: AppColors.premrayColor,
                           width: 3,
@@ -355,16 +318,9 @@ class _InfluencerProfileDetailsState
                       ),
                       child: SizedBox(
                         height: height * 0.20,
-                     width: height * 0.20,                          child:
-                      DefaultImageWidget(radius: 100,)),
-                      // child: ClipOval(
-                      //   child: Image.network(
-                      //     'https://media.licdn.com/dms/image/v2/C4E12AQHzBAiANK2ceQ/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1627292304016?e=2147483647&v=beta&t=CaGaKBl8DcF2tV6Ygjhe9uOPJdAc25Gis-KnOGC8G9E',
-                      //     height: height * 0.20,
-                      //     width: height * 0.20,
-                      //     fit: BoxFit.cover,
-                      //   ),
-                      // ),
+                        width: height * 0.20,
+                        child: DefaultImageWidget(radius: 100),
+                      ),
                     ),
                   ],
                 ),
@@ -375,50 +331,50 @@ class _InfluencerProfileDetailsState
       ),
     );
   }
+
   Widget buildSocialTile({
     required int id,
     required String url,
-
     required String name,
   }) {
-
-
     switch (id) {
       case 1: // Facebook
-        return _buildTile('assets/svg/facebook-svgrepo-com.svg', 'فيسبوك',
-          url,);
+        return _buildTile('assets/svg/facebook-svgrepo-com.svg', 'فيسبوك', url);
       case 2: // Instagram
-        return _buildTile('assets/svg/instagram-1-svgrepo-com.svg', 'إنستقرام',
-          url,);
+        return _buildTile(
+          'assets/svg/instagram-1-svgrepo-com.svg',
+          'إنستقرام',
+          url,
+        );
       case 3: // TikTok
-        return _buildTile('assets/svg/tiktok-logo-logo-svgrepo-com.svg', "تيك"
-            "توك", url, );
+        return _buildTile(
+          'assets/svg/tiktok-logo-logo-svgrepo-com.svg',
+          "تيك توك",
+          url,
+        );
       case 4: // Twitter
-        return _buildTile('assets/svg/twitter-svgrepo-com.svg', "تويتر | X",
-          url, );
+        return _buildTile(
+          'assets/svg/twitter-svgrepo-com.svg',
+          "تويتر | X",
+          url,
+        );
       case 5: // YouTube
-        return _buildTile('assets/svg/youtube-svgrepo-com.svg', "يوتيوب",
-          url, );
+        return _buildTile('assets/svg/youtube-svgrepo-com.svg', "يوتيوب", url);
       default:
-        return _buildTile('assets/svg/youtube-svgrepo-com.svg', name, url, );
+        return _buildTile('assets/svg/youtube-svgrepo-com.svg', name, url);
     }
   }
 
-  Widget _buildTile(String iconPath, String name, String url, ) {
+  Widget _buildTile(String iconPath, String name, String url) {
     return ListTile(
-      leading: SvgPicture.asset(
-        iconPath,
-        height: 30,
-        width: 100
-      ),
+      leading: SvgPicture.asset(iconPath, height: 30, width: 100),
       title: Text(
-        '$name',
-        style: TextStyle(color: Colors.blueAccent,fontSize: 16),
+        name,
+        style: TextStyle(color: Colors.blueAccent, fontSize: 16),
       ),
       onTap: () => launchUrl(Uri.parse(url)),
     );
   }
-
 }
 
 class RowWidet extends StatelessWidget {

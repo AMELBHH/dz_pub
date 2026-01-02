@@ -1,11 +1,11 @@
 class AppRoutes {
   static const userTypeQuestionScreen = '/UserTypeQuestionScreen';
- static const listOfCustomPromotion = '/ListOfCustomPromotion';
+  static const listOfCustomPromotion = '/ListOfCustomPromotion';
   static const firstIntroClient = '/First_Intro_Client';
   static const secondIntroClient = '/Second_Intro_Client';
   static const thirdIntroClient = '/Third_Intro_Client';
-static const promotionDetails = '/PromotionDetails';
-static const listOfPromotions = '/ListOfPromotions';
+  static const promotionDetails = '/PromotionDetails';
+  static const listOfPromotions = '/ListOfPromotions';
   static const firstIntroInfluencers = '/First_Intro_Influencers';
   static const secondIntroInfluencers = '/Second_Intro_Influencers';
   static const thirdIntroInfluencers = '/Third_Intro_Influencers';
@@ -20,4 +20,8 @@ static const listOfPromotions = '/ListOfPromotions';
   static const customPromotion = '/CustomPromotion';
   static const lastStep = '/Last_step';
   static const platformServices = '/PlatformServices';
+  static const adminHomeScreen = '/Admin_Home_Screen';
+  static const reportManagement = '/Report_Management';
+  static const accountManagement = '/Account_Management';
+  static const userDetails = '/User_Details';
 }

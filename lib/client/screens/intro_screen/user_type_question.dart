@@ -1,16 +1,18 @@
 import 'package:dz_pub/constants/strings.dart';
 import 'package:dz_pub/core/styling/App_text_style.dart';
+import 'package:dz_pub/core/styling/App_colors.dart';
 import 'package:dz_pub/routing/App_routes.dart';
 import 'package:dz_pub/session/new_session.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dz_pub/controllers/providers/auth_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UserTypeQuestionScreen extends StatelessWidget {
+class UserTypeQuestionScreen extends ConsumerWidget {
   const UserTypeQuestionScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -70,12 +72,10 @@ class UserTypeQuestionScreen extends StatelessWidget {
                     description: 'أنشئ محتوى وتعاون مع العلامات التجارية',
                     color: Colors.deepPurpleAccent,
                     onTap: () async {
-                    NewSession.save(PrefKeys.userType, 'influencer');
-                    debugPrint("type of user ${NewSession.get(PrefKeys
-                        .userType, "no user type selected")}");
-                      // SharedPreferences prefs =
-                      //     await SharedPreferences.getInstance();
-                      // await prefs.setString('user_type', 'influencer');
+                      NewSession.save(PrefKeys.userType, 'influencer');
+                      debugPrint(
+                        "type of user ${NewSession.get(PrefKeys.userType, "no user type selected")}",
+                      );
                       context.pushReplacementNamed(
                         AppRoutes.firstIntroInfluencers,
                       );
@@ -89,19 +89,188 @@ class UserTypeQuestionScreen extends StatelessWidget {
                     color: Colors.blueAccent,
                     onTap: () async {
                       NewSession.save(PrefKeys.userType, 'client');
-
-
-                      // SharedPreferences prefs =
-                      //     await SharedPreferences.getInstance();
-                      // await prefs.setString('user_type', 'client');
                       context.pushReplacementNamed(AppRoutes.firstIntroClient);
                     },
+                  ),
+                  const SizedBox(height: 24),
+                  TextButton.icon(
+                    onPressed: () => _showAdminLoginDialog(context, ref),
+                    icon: Icon(
+                      Icons.admin_panel_settings,
+                      color: AppColors.premrayColor,
+                    ),
+                    label: Text(
+                      'الدخول بإسم المنصة',
+                      style: AppTextStyle.black19.copyWith(
+                        color: AppColors.premrayColor,
+                        fontSize: 16,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showAdminLoginDialog(BuildContext context, WidgetRef ref) {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => Consumer(
+        builder: (context, ref, child) {
+          final authState = ref.watch(loginNotifier);
+
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: Text(
+              'دخول المنصة',
+              textAlign: TextAlign.center,
+              style: AppTextStyle.black19,
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: emailController,
+                  style: AppTextStyle.black19.copyWith(fontSize: 16),
+                  decoration: InputDecoration(
+                    labelText: 'البريد الإلكتروني',
+                    labelStyle: AppTextStyle.titel.copyWith(color: Colors.grey),
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color: AppColors.premrayColor,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: AppColors.premrayColor),
+                    ),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  enabled: !authState.isLoading,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: passwordController,
+                  style: AppTextStyle.black19.copyWith(fontSize: 16),
+                  decoration: InputDecoration(
+                    labelText: 'كلمة المرور',
+                    labelStyle: AppTextStyle.titel.copyWith(color: Colors.grey),
+                    prefixIcon: Icon(Icons.lock, color: AppColors.premrayColor),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: AppColors.premrayColor),
+                    ),
+                  ),
+                  obscureText: true,
+                  enabled: !authState.isLoading,
+                ),
+                if (authState.isLoading)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: CircularProgressIndicator(
+                      color: AppColors.premrayColor,
+                    ),
+                  ),
+              ],
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: authState.isLoading
+                            ? null
+                            : () => Navigator.pop(context),
+                        child: Text(
+                          'إلغاء',
+                          style: AppTextStyle.titel.copyWith(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: authState.isLoading
+                            ? null
+                            : () async {
+                                try {
+                                  final user = await ref
+                                      .read(loginNotifier.notifier)
+                                      .login(
+                                        emailController.text,
+                                        passwordController.text,
+                                        ref,
+                                        context,
+                                      );
+
+                                  if (user.typeId == 3) {
+                                    NewSession.save(PrefKeys.userType, 'admin');
+                                    Navigator.pop(context);
+                                    context.pushReplacementNamed(
+                                      AppRoutes.adminHomeScreen,
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'عذراً، هذا الحساب ليس حساب مسؤول',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'خطأ في الدخول: ${e.toString().replaceAll('Exception: ', '')}',
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.premrayColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        child: Text(
+                          'دخول',
+                          style: AppTextStyle.homebuttonStyle.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
