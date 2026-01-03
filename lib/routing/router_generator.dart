@@ -1,5 +1,4 @@
 import 'package:dz_pub/api/promations_models/promotions.dart';
-import 'package:dz_pub/api/users.dart';
 import 'package:dz_pub/client/questions/last_step.dart';
 
 import 'package:dz_pub/client/questions/custom_dropdown_question.dart';
@@ -10,6 +9,8 @@ import 'package:dz_pub/client/screens/client/list_of_influencers_ui.dart';
 import 'package:dz_pub/client/screens/client/list_of_influencers_by_niche_ui.dart';
 import 'package:dz_pub/client/screens/client/platform_services.dart';
 import 'package:dz_pub/client/screens/client/client_home_ui.dart';
+import 'package:dz_pub/client/screens/client/client_advertisements_ui.dart';
+import 'package:dz_pub/client/screens/Influencers/influencer_advertisements_ui.dart';
 import 'package:dz_pub/client/screens/client/list_of_custom_promotion_ui.dart';
 import 'package:dz_pub/client/screens/client/list_of_promotions_ui.dart';
 import 'package:dz_pub/client/screens/client/promotion_detials_ui.dart';
@@ -28,6 +29,7 @@ import 'package:dz_pub/view/admin_ui/admin_home_ui.dart';
 import 'package:dz_pub/view/admin_ui/account_management/account_list_ui.dart';
 import 'package:dz_pub/view/admin_ui/account_management/user_details_ui.dart';
 import 'package:dz_pub/view/admin_ui/promotions_management_ui.dart';
+import 'package:dz_pub/view/admin_ui/advertisements_management_ui.dart';
 import 'package:dz_pub/view/authorization_ui/update_profile_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -134,7 +136,12 @@ class RouterGenrator {
         path: AppRoutes.promotionDetails,
         builder: (context, state) {
           final promotion = state.extra as Promotion?;
-          return PromotionDetailsScreen(promotion: promotion);
+          final hideInfluencerDetails =
+              state.uri.queryParameters['hideInfluencerDetails'] == 'true';
+          return PromotionDetailsScreen(
+            promotion: promotion,
+            hideInfluencerDetails: hideInfluencerDetails,
+          );
         },
       ),
       GoRoute(
@@ -178,6 +185,21 @@ class RouterGenrator {
         path: AppRoutes.updateProfile,
         name: AppRoutes.updateProfile,
         builder: (context, state) => const UpdateProfileUi(),
+      ),
+      GoRoute(
+        path: AppRoutes.advertisementsManagement,
+        name: AppRoutes.advertisementsManagement,
+        builder: (context, state) => const AdvertisementsManagementUi(),
+      ),
+      GoRoute(
+        path: AppRoutes.clientAdvertisements,
+        name: AppRoutes.clientAdvertisements,
+        builder: (context, state) => const ClientAdvertisementsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.influencerAdvertisements,
+        name: AppRoutes.influencerAdvertisements,
+        builder: (context, state) => const InfluencerAdvertisementsScreen(),
       ),
     ],
   );

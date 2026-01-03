@@ -1,6 +1,6 @@
-
 import 'package:dz_pub/api/promations_models/custom_promotions.dart';
 import 'package:dz_pub/api/promations_models/promotions.dart';
+import 'package:dz_pub/api/advertisement.dart';
 
 class PromotionState {
   final bool isLoading;
@@ -10,6 +10,7 @@ class PromotionState {
   final Future<List<Promotion>>? promotions;
   final Future<Promotion>? promotion;
   final Future<List<CustomPromotion>>? customPromotion;
+  final Future<List<Advertisement>>? advertisements;
 
   PromotionState({
     this.isLoading = false,
@@ -19,6 +20,7 @@ class PromotionState {
     this.promotion,
     this.promotions,
     this.customPromotion,
+    this.advertisements,
   });
 
   PromotionState copyWith({
@@ -29,6 +31,7 @@ class PromotionState {
     Future<Promotion>? promotion,
     Future<List<Promotion>>? promotions,
     Future<List<CustomPromotion>>? customPromotion,
+    Future<List<Advertisement>>? advertisements,
   }) {
     return PromotionState(
       isLoading: isLoading ?? this.isLoading,
@@ -38,6 +41,7 @@ class PromotionState {
       promotions: promotions ?? this.promotions,
       status: status ?? this.status,
       customPromotion: customPromotion ?? this.customPromotion,
+      advertisements: advertisements ?? this.advertisements,
     );
   }
 }

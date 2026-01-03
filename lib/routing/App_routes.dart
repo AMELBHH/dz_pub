@@ -26,4 +26,7 @@ class AppRoutes {
   static const userDetails = '/User_Details';
   static const promotionsManagement = '/Promotions_Management';
   static const updateProfile = '/Update_Profile';
+  static const advertisementsManagement = '/Advertisements_Management';
+  static const clientAdvertisements = '/Client_Advertisements';
+  static const influencerAdvertisements = '/Influencer_Advertisements';
 }

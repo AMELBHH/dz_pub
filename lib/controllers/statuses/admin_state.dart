@@ -1,3 +1,4 @@
+import 'package:dz_pub/api/advertisement.dart';
 import 'package:dz_pub/api/promations_models/custom_promotions.dart';
 import 'package:dz_pub/api/promations_models/promotions.dart';
 import 'package:dz_pub/api/users.dart';
@@ -8,6 +9,7 @@ class AdminState {
   final List<User> users;
   final List<Promotion> promotions;
   final List<CustomPromotion> customPromotions;
+  final List<Advertisement> advertisements;
   final User? selectedUser;
 
   AdminState({
@@ -16,6 +18,7 @@ class AdminState {
     this.users = const [],
     this.promotions = const [],
     this.customPromotions = const [],
+    this.advertisements = const [],
     this.selectedUser,
   });
 
@@ -25,6 +28,7 @@ class AdminState {
     List<User>? users,
     List<Promotion>? promotions,
     List<CustomPromotion>? customPromotions,
+    List<Advertisement>? advertisements,
     User? selectedUser,
     bool clearSelectedUser = false, // Flag to explicitly clear selectedUser
   }) {
@@ -34,6 +38,7 @@ class AdminState {
       users: users ?? this.users,
       promotions: promotions ?? this.promotions,
       customPromotions: customPromotions ?? this.customPromotions,
+      advertisements: advertisements ?? this.advertisements,
       selectedUser: clearSelectedUser
           ? null
           : (selectedUser ?? this.selectedUser),

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dz_pub/api/promations_models/custom_promotions.dart';
 import 'package:dz_pub/api/promations_models/promotions.dart';
+import 'package:dz_pub/api/advertisement.dart';
 import 'package:dz_pub/constants/strings.dart';
 import 'package:dz_pub/controllers/statuses/promotion_state.dart';
 import 'package:dz_pub/session/new_session.dart';
@@ -346,5 +347,83 @@ class PromotionNotifier extends StateNotifier<PromotionState> {
 
     // Convert promotion JSON to model
     return Promotion.fromJson(body["promotion"]);
+  }
+
+  Future<List<Advertisement>> _getAdvertisementsByClient() async {
+    final clientId = NewSession.get(PrefKeys.id, 0);
+    final url =
+        "${ServerLocalhostEm.getAdvertisementsByClient}?client_id=$clientId";
+
+    final response = await http.get(Uri.parse(url));
+    debugPrint("Get Advertisements By Client Response: ${response.body}");
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to load advertisements");
+    }
+
+    final body = jsonDecode(response.body);
+    if (body['status'] != true) {
+      throw Exception(body['message'] ?? "Unknown error");
+    }
+
+    return (body['data'] as List)
+        .map((json) => Advertisement.fromJson(json))
+        .toList();
+  }
+
+  Future<void> getAdvertisementsByClient() async {
+    state = state.copyWith(isLoading: true, hasError: false, errorMessage: "");
+    try {
+      final advertisements = await _getAdvertisementsByClient();
+      state = state.copyWith(
+        isLoading: false,
+        advertisements: Future.value(advertisements),
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<List<Advertisement>> _getAdvertisementsByInfluencer() async {
+    final influencerId = NewSession.get(PrefKeys.id, 0);
+    final url =
+        "${ServerLocalhostEm.getAdvertisementsByInfluencer}?influencer_id=$influencerId";
+
+    final response = await http.get(Uri.parse(url));
+    debugPrint("Get Advertisements By Influencer Response: ${response.body}");
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to load advertisements");
+    }
+
+    final body = jsonDecode(response.body);
+    if (body['status'] != true) {
+      throw Exception(body['message'] ?? "Unknown error");
+    }
+
+    return (body['data'] as List)
+        .map((json) => Advertisement.fromJson(json))
+        .toList();
+  }
+
+  Future<void> getAdvertisementsByInfluencer() async {
+    state = state.copyWith(isLoading: true, hasError: false, errorMessage: "");
+    try {
+      final advertisements = await _getAdvertisementsByInfluencer();
+      state = state.copyWith(
+        isLoading: false,
+        advertisements: Future.value(advertisements),
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: e.toString(),
+      );
+    }
   }
 }

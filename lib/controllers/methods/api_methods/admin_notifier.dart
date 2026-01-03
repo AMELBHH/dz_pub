@@ -1,4 +1,6 @@
+import 'package:dz_pub/api/advertisement.dart';
 import 'dart:convert';
+import 'dart:io';
 import 'package:dz_pub/api/promations_models/custom_promotions.dart';
 import 'package:dz_pub/api/promations_models/promotions.dart';
 import 'package:dz_pub/api/users.dart';
@@ -499,5 +501,210 @@ class AdminNotifier extends StateNotifier<AdminState> {
       debugPrint("Delete User Error: $e");
     }
     return false;
+  }
+
+  Future<void> getAdvertisements() async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+    try {
+      final response = await http.get(
+        Uri.parse(ServerLocalhostEm.getAdvertisements),
+      );
+      debugPrint("Get Advertisements Response: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> res = jsonDecode(response.body);
+        if (res['status'] == true) {
+          final List<dynamic> data = res['data'];
+          final List<Advertisement> advertisements = data
+              .map((e) => Advertisement.fromJson(e))
+              .toList();
+          state = state.copyWith(
+            isLoading: false,
+            advertisements: advertisements,
+          );
+        } else {
+          state = state.copyWith(
+            isLoading: false,
+            errorMessage: res['message'] ?? 'Error fetching advertisements',
+          );
+        }
+      } else {
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: 'Server Error: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      debugPrint("Get Advertisements Error: $e");
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+    }
+  }
+
+  Future<void> getAdvertisementsByVerification({
+    String? isVerified,
+    int? typeId,
+  }) async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+
+    final Map<String, String> queryParams = {};
+    if (isVerified != null) queryParams['is_verified'] = isVerified;
+    if (typeId != null) queryParams['type_id'] = typeId.toString();
+
+    final uri = Uri.parse(
+      ServerLocalhostEm.getAdvertisementsByVerification,
+    ).replace(queryParameters: queryParams);
+
+    try {
+      final response = await http.get(uri);
+      debugPrint(
+        "Get Advertisements By Verification Response: ${response.body}",
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> res = jsonDecode(response.body);
+        if (res['status'] == true) {
+          final List<dynamic> data = res['data'];
+          final List<Advertisement> advertisements = data
+              .map((e) => Advertisement.fromJson(e))
+              .toList();
+          state = state.copyWith(
+            isLoading: false,
+            advertisements: advertisements,
+          );
+        } else {
+          state = state.copyWith(
+            isLoading: false,
+            errorMessage: res['message'] ?? 'Error fetching advertisements',
+          );
+        }
+      } else {
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: 'Server Error: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      debugPrint("Get Advertisements By Verification Error: $e");
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+    }
+  }
+
+  Future<bool> deleteAdvertisement(int advertisementId) async {
+    try {
+      final uri = Uri.parse(ServerLocalhostEm.deleteAdvertisement).replace(
+        queryParameters: {'advertisement_id': advertisementId.toString()},
+      );
+
+      final response = await http.delete(uri);
+      debugPrint("Delete Advertisement Response: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> res = jsonDecode(response.body);
+        if (res['status'] == true) {
+          final updatedAds = state.advertisements
+              .where((ad) => ad.id != advertisementId)
+              .toList();
+          state = state.copyWith(advertisements: updatedAds);
+          return true;
+        }
+      }
+    } catch (e) {
+      debugPrint("Delete Advertisement Error: $e");
+    }
+    return false;
+  }
+
+  Future<bool> addAdvertisement({
+    required int promotionId,
+    required String description,
+    File? file,
+  }) async {
+    try {
+      final uri = Uri.parse(ServerLocalhostEm.addAdvertisement);
+      final request = http.MultipartRequest('POST', uri);
+
+      request.fields['promation_id'] = promotionId.toString();
+      request.fields['description'] = description;
+
+      if (file != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('file_path', file.path),
+        );
+      }
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      debugPrint("Add Advertisement Response: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> res = jsonDecode(response.body);
+        return res['status'] == true;
+      }
+    } catch (e) {
+      debugPrint("Add Advertisement Error: $e");
+    }
+    return false;
+  }
+
+  Future<bool> updateAdvertisement({
+    required int advertisementId,
+    String? description,
+    File? file,
+  }) async {
+    try {
+      final uri = Uri.parse(ServerLocalhostEm.updateAdvertisement);
+      // If it's a PUT request with files, some servers require using POST with _method=PUT
+      // but the user explicitly said PUT method.
+      final request = http.MultipartRequest('POST', uri);
+      request.fields['_method'] =
+          'PUT'; // Common pattern for Laravel/multipart PUT
+
+      request.fields['advertisement_id'] = advertisementId.toString();
+      if (description != null) request.fields['description'] = description;
+
+      if (file != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('file_path', file.path),
+        );
+      }
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      debugPrint("Update Advertisement Response: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> res = jsonDecode(response.body);
+        return res['status'] == true;
+      }
+    } catch (e) {
+      debugPrint("Update Advertisement Error: $e");
+    }
+    return false;
+  }
+
+  Future<List<Advertisement>> getAdvertisementsByPromotion(
+    int promotionId,
+  ) async {
+    try {
+      final uri = Uri.parse(
+        ServerLocalhostEm.getAdvertisementsByPromotion,
+      ).replace(queryParameters: {'promation_id': promotionId.toString()});
+
+      final response = await http.get(uri);
+      debugPrint("Get Ads By Promotion Response: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> res = jsonDecode(response.body);
+        if (res['status'] == true && res['data'] != null) {
+          final List<dynamic> data = res['data'];
+          return data.map((e) => Advertisement.fromJson(e)).toList();
+        }
+      } else if (response.statusCode == 404) {
+        return [];
+      }
+    } catch (e) {
+      debugPrint("Get Ads By Promotion Error: $e");
+    }
+    return [];
   }
 }

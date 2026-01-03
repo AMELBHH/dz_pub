@@ -5,6 +5,7 @@ import 'package:dz_pub/api/promations_models/topic_already_ready.dart';
 import 'package:dz_pub/api/promations_models/topic_from_influencer.dart';
 import 'package:dz_pub/api/promations_models/type_of_promotion.dart';
 import 'package:dz_pub/api/users.dart';
+import 'package:dz_pub/api/advertisement.dart';
 
 import 'movement.dart';
 
@@ -34,6 +35,7 @@ class Promotion {
   final String? createdAt;
   final String? updatedAt;
   final Influencer? influencer;
+  final Advertisement? advertisement;
 
   // LISTS
   final List<_SocialMedia>? socialMedia;
@@ -69,6 +71,7 @@ class Promotion {
     this.topicFromInfluancers,
     this.topicAlreadyReadies,
     this.influencer,
+    this.advertisement,
   });
 
   factory Promotion.fromJson(Map<String, dynamic> json) {
@@ -128,6 +131,9 @@ class Promotion {
           : [],
       influencer: json['influencer'] != null
           ? Influencer.fromJson(json['influencer'])
+          : null,
+      advertisement: json['advertisement'] != null
+          ? Advertisement.fromJson(json['advertisement'])
           : null,
     );
   }

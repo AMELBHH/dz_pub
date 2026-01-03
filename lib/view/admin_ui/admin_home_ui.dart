@@ -93,6 +93,25 @@ class AdminHomeScreen extends ConsumerWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: () => context.push(AppRoutes.advertisementsManagement),
+              icon: const Icon(Icons.ads_click, color: Colors.white),
+              label: const Text(
+                'إدارة الإعلانات',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.premrayColor,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
           ],
         ),
       ),

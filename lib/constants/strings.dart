@@ -67,6 +67,18 @@ class ServerLocalhostEm {
   static String getUserVerificationStatus =
       "${seedGet}user-verification-status";
   static String deleteUser = "${server}seed/delete/user";
+  static String getAdvertisements = "${server}seed/get/advertisements";
+  static String getAdvertisementsByVerification =
+      "${server}seed/get/advertisements-by-verification";
+  static String deleteAdvertisement = "${server}seed/delete/advertisement";
+  static String addAdvertisement = "${server}seed/add/advertisement";
+  static String updateAdvertisement = "${server}seed/update/advertisement";
+  static String getAdvertisementsByPromotion =
+      "${server}seed/get/advertisements-by-promotion";
+  static String getAdvertisementsByClient =
+      "${server}seed/get/advertisements-by-client";
+  static String getAdvertisementsByInfluencer =
+      "${server}seed/get/advertisements-by-influencer";
   //for test
 }
 

@@ -194,6 +194,27 @@ class ClientHome extends ConsumerWidget {
           CustomButtonWidget(
             colorButton: AppColors.premrayColor,
             onPressd: () {
+              if (NewSession.get(PrefKeys.logged, "") == "") {
+                ref
+                    .read(showSnackBarNotifier.notifier)
+                    .showNormalSnackBar(
+                      context: context,
+                      message: "يرجى تسحيل الدخول أولا",
+                    );
+                return;
+              }
+              context.pushNamed(AppRoutes.clientAdvertisements);
+            },
+            textButton: 'إعلاناتي',
+            textStyle: AppTextStyle.homebuttonStyle,
+            heigth: height * 0.07,
+            width: width * 0.9,
+            radius: 180,
+          ),
+          SizedBox(height: height * 0.015),
+          CustomButtonWidget(
+            colorButton: AppColors.premrayColor,
+            onPressd: () {
               //ListOfCustomPromotion
               context.pushNamed(AppRoutes.listOfCustomPromotion);
             },

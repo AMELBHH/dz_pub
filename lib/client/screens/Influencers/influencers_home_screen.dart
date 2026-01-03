@@ -12,7 +12,7 @@ import 'package:go_router/go_router.dart';
 import '../../../constants/strings.dart';
 import '../../../session/new_session.dart';
 
-class InfluencersHome  extends StatelessWidget {
+class InfluencersHome extends StatelessWidget {
   const InfluencersHome({super.key});
 
   @override
@@ -30,23 +30,28 @@ class InfluencerHomeButtons extends ConsumerWidget {
     final width = size.width;
     final height = size.height;
     return SingleChildScrollView(
-
       child: Column(
-
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(height: height * .15),
           CustomButtonWidget(
             colorButton: AppColors.premrayColor,
             onPressd: () {
-              if(NewSession.get(PrefKeys.logged, "") == ""){
-                ref.read(showSnackBarNotifier.notifier).showNormalSnackBar(context:context,message: "يرجى تسحيل الدخول أولا");
+              if (NewSession.get(PrefKeys.logged, "") == "") {
+                ref
+                    .read(showSnackBarNotifier.notifier)
+                    .showNormalSnackBar(
+                      context: context,
+                      message: "يرجى تسحيل الدخول أولا",
+                    );
                 return;
               }
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                          ListOfPromotions(statusId:4,title:"إشهارات قيد التسليم"),
+                  builder: (BuildContext context) => ListOfPromotions(
+                    statusId: 4,
+                    title: "إشهارات قيد التسليم",
+                  ),
                 ),
               );
             },
@@ -60,14 +65,21 @@ class InfluencerHomeButtons extends ConsumerWidget {
           CustomButtonWidget(
             colorButton: AppColors.premrayColor,
             onPressd: () {
-              if(NewSession.get(PrefKeys.logged, "") == ""){
-                ref.read(showSnackBarNotifier.notifier).showNormalSnackBar(context:context,message: "يرجى تسحيل الدخول أولا");
+              if (NewSession.get(PrefKeys.logged, "") == "") {
+                ref
+                    .read(showSnackBarNotifier.notifier)
+                    .showNormalSnackBar(
+                      context: context,
+                      message: "يرجى تسحيل الدخول أولا",
+                    );
                 return;
               }
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      ListOfPromotions(statusId:3,title:"إشهارات قيد المناقشة"),
+                  builder: (BuildContext context) => ListOfPromotions(
+                    statusId: 3,
+                    title: "إشهارات قيد المناقشة",
+                  ),
                 ),
               );
             },
@@ -81,14 +93,21 @@ class InfluencerHomeButtons extends ConsumerWidget {
           CustomButtonWidget(
             colorButton: AppColors.premrayColor,
             onPressd: () {
-              if(NewSession.get(PrefKeys.logged, "") == ""){
-                ref.read(showSnackBarNotifier.notifier).showNormalSnackBar(context:context,message: "يرجى تسحيل الدخول أولا");
+              if (NewSession.get(PrefKeys.logged, "") == "") {
+                ref
+                    .read(showSnackBarNotifier.notifier)
+                    .showNormalSnackBar(
+                      context: context,
+                      message: "يرجى تسحيل الدخول أولا",
+                    );
                 return;
               }
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      ListOfPromotions(statusId:6,title:"إشهارات مُعترض عيها"),
+                  builder: (BuildContext context) => ListOfPromotions(
+                    statusId: 6,
+                    title: "إشهارات مُعترض عيها",
+                  ),
                 ),
               );
             },
@@ -102,8 +121,13 @@ class InfluencerHomeButtons extends ConsumerWidget {
           CustomButtonWidget(
             colorButton: AppColors.premrayColor,
             onPressd: () {
-              if(NewSession.get(PrefKeys.logged, "") == ""){
-                ref.read(showSnackBarNotifier.notifier).showNormalSnackBar(context:context,message: "يرجى تسحيل الدخول أولا");
+              if (NewSession.get(PrefKeys.logged, "") == "") {
+                ref
+                    .read(showSnackBarNotifier.notifier)
+                    .showNormalSnackBar(
+                      context: context,
+                      message: "يرجى تسحيل الدخول أولا",
+                    );
                 return;
               }
               //push to list of Promotion with status id
@@ -111,7 +135,7 @@ class InfluencerHomeButtons extends ConsumerWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      ListOfPromotions(statusId:5,title:"إشهارات مرفوضة"  ),
+                      ListOfPromotions(statusId: 5, title: "إشهارات مرفوضة"),
                 ),
               );
             },
@@ -126,6 +150,27 @@ class InfluencerHomeButtons extends ConsumerWidget {
           CustomButtonWidget(
             colorButton: AppColors.premrayColor,
             onPressd: () {
+              if (NewSession.get(PrefKeys.logged, "") == "") {
+                ref
+                    .read(showSnackBarNotifier.notifier)
+                    .showNormalSnackBar(
+                      context: context,
+                      message: "يرجى تسحيل الدخول أولا",
+                    );
+                return;
+              }
+              context.pushNamed(AppRoutes.influencerAdvertisements);
+            },
+            textButton: 'إعلاناتي',
+            textStyle: AppTextStyle.homebuttonStyle,
+            heigth: height * 0.07,
+            width: width * 0.9,
+            radius: 180,
+          ),
+          SizedBox(height: height * 0.015),
+          CustomButtonWidget(
+            colorButton: AppColors.premrayColor,
+            onPressd: () {
               GoRouter.of(context).go(AppRoutes.userTypeQuestionScreen);
               removeUserInfo();
             },
@@ -136,10 +181,8 @@ class InfluencerHomeButtons extends ConsumerWidget {
             radius: 180,
           ),
           SizedBox(height: height * 0.015),
-
         ],
       ),
     );
   }
-
 }
