@@ -163,8 +163,8 @@ class LoginNotifier extends StateNotifier<AuthState> {
       throw Exception("Login failed: $errorMsg");
     } else {
       state = state.copyWith(isLoading: false);
-
-      throw Exception("Server error ${response.statusCode}");
+      //debugPrint("response message ${response.body}");
+      throw Exception("response body ${response.body}");
     }
   }
 }

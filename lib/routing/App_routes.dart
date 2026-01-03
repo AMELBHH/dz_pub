@@ -24,4 +24,6 @@ class AppRoutes {
   static const reportManagement = '/Report_Management';
   static const accountManagement = '/Account_Management';
   static const userDetails = '/User_Details';
+  static const promotionsManagement = '/Promotions_Management';
+  static const updateProfile = '/Update_Profile';
 }

@@ -32,6 +32,10 @@ class ServerLocalhostEm {
   static String getUserType = "${seedGet}user-type";
   static String getPromotionsOfClient = "${server}get/promation";
   static String getPromotionsByStatus = "${server}get/promation-by-status";
+  static String getPromotionsByStatusIdForAdmin =
+      "${server}get/promotions-by-status-id-for-admin";
+  static String getPromotions = "${server}get/promotions";
+  static String getAllCustomPromotions = "${seedGet}all-custom-promotions";
 
   static String getInfluencersByCategory = "${seedGet}influencer-category";
   static String getInfluencerById = "${seedGet}influencer";
@@ -58,6 +62,11 @@ class ServerLocalhostEm {
   static String addReport = "${server}seed/add/report";
   static String updateUserStatus = "${server}seed/update/user-status";
   static String updateUserVerification = "${server}seed/update/verify";
+  static String updatePromotionStatus = "${server}update/promotion-status";
+  static String updateProfile = "${server}auth/update-profile";
+  static String getUserVerificationStatus =
+      "${seedGet}user-verification-status";
+  static String deleteUser = "${server}seed/delete/user";
   //for test
 }
 
@@ -74,7 +83,6 @@ class PrefKeys {
   static const String isFirstTime = 'isFirstTime';
   static const String profile = 'profile';
   static const String name = 'name';
-  static const String apartmentId = 'apartmentId';
   static const String facebook = 'facebook';
   static const String email = 'email';
   static const String createdAt = 'createdAt';

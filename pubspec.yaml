@@ -47,6 +47,7 @@ dependencies:
   http: ^1.2.2
   image_picker: ^1.2.1
   colorful_safe_area: ^1.0.0
+  intl: ^0.20.2
   
 
 dev_dependencies:

@@ -28,8 +28,10 @@ class _InfluencerProfileState extends ConsumerState<InfluencerProfile> {
       4: "يوتيوب",
       5: "تويتر",
     };
-      final influencerCategories = ref.watch(loginNotifier).categories;
-    final influencerSocialMediaLinks = ref.watch(loginNotifier).socialMediaLinks;
+    final influencerCategories = ref.watch(loginNotifier).categories;
+    final influencerSocialMediaLinks = ref
+        .watch(loginNotifier)
+        .socialMediaLinks;
 
     final bio = NewSession.get(PrefKeys.inflBio, '');
     final gender = NewSession.get(PrefKeys.inflGender, '');
@@ -39,8 +41,9 @@ class _InfluencerProfileState extends ConsumerState<InfluencerProfile> {
     List<SocialMediaLink> socialLinks = [];
 
     final categoryJson = NewSession.get(PrefKeys.inflCategories, '');
-    final categories =
-    categoryJson.isEmpty ? <dynamic>[] : (jsonDecode(categoryJson) as List);
+    final categories = categoryJson.isEmpty
+        ? <dynamic>[]
+        : (jsonDecode(categoryJson) as List);
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -63,17 +66,18 @@ class _InfluencerProfileState extends ConsumerState<InfluencerProfile> {
                     } else if (snapshot.hasError) {
                       return Text('حدث خطأ: ${snapshot.error}');
                     } else {
-                      final   socialMediaLinks = snapshot.data ?? [];
+                      final socialMediaLinks = snapshot.data ?? [];
 
                       if (socialMediaLinks.isEmpty) {
-                          return const Text("لا توجد روابط حالياً");
+                        return const Text("لا توجد روابط حالياً");
                       } else {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: socialMediaLinks.map((item) {
                             final int id = item?.socialMediaId ?? 0;
                             final String url = item?.url ?? "";
-                            final platformName = platformNames[id]?? "غير معروف";
+                            final platformName =
+                                platformNames[id] ?? "غير معروف";
 
                             return Text("$platformName: $url");
                           }).toList(),
@@ -82,9 +86,6 @@ class _InfluencerProfileState extends ConsumerState<InfluencerProfile> {
                     }
                   },
                 ),
-
-
-
               ],
             ),
           ),
@@ -123,8 +124,7 @@ class _InfluencerProfileState extends ConsumerState<InfluencerProfile> {
                       }
                     }
                   },
-                )
-
+                ),
               ],
             ),
           ),
@@ -139,13 +139,25 @@ class _InfluencerProfileState extends ConsumerState<InfluencerProfile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const TitleText("معلومات عن المؤثر"),
-                Text("السيرة الذاتية: $bio"),
-                Text("الجنس: $gender"),
-                Text("التقييم: $rating"),
+                if (bio.isNotEmpty)
+                  Text(
+                    "السيرة الذاتية: $bio",
+                    style: const TextStyle(fontFamily: 'Cairo'),
+                  ),
+                if (gender.isNotEmpty)
+                  Text(
+                    "الجنس: $gender",
+                    style: const TextStyle(fontFamily: 'Cairo'),
+                  ),
+                Text(
+                  "التقييم: $rating",
+                  style: const TextStyle(fontFamily: 'Cairo'),
+                ),
               ],
             ),
           ),
         ],
       ),
-    );}
+    );
+  }
 }

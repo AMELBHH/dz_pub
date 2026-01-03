@@ -19,7 +19,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:go_router/go_router.dart';
 
-
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -34,8 +33,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(categorySelectableName.notifier).state = '';
       ref.read(categorySelectedId.notifier).state = 0;
-
-
     });
   }
 
@@ -49,7 +46,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor:Colors.grey.shade200,
+        backgroundColor: Colors.grey.shade200,
         appBar: AppBar(
           title: Text("DZ_PUB"),
           // backgroundColor: Colors.amber[600],
@@ -59,48 +56,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               const Tab(icon: Icon(Icons.person)),
             ],
             onTap: (index) async {
-              if(index == 0){
+              if (index == 0) {
                 debugPrint("NewSession logged $logged)}");
                 debugPrint("NewSession userTypeStored $userTypeStored");
                 debugPrint("NewSession userTypeJson $userTypeJson");
                 debugPrint("NewSession userTypeToCheck $userTypeToCheck");
               }
               if (index == 1) {
-                if(NewSession.get(PrefKeys.userTypeId, 1) == 2){
-                if (ref.read(loginNotifier).categories == null ||
-                    ref.read(loginNotifier).socialMediaLinks == null) {
-                  await ref.read(loginNotifier.notifier).getCategoriesAndSocialMediaLinksOfInfluencer(
-                    NewSession.get(PrefKeys.id, 0),
-                  );
+                if (NewSession.get(PrefKeys.userTypeId, 1) == 2) {
+                  if (ref.read(loginNotifier).categories == null ||
+                      ref.read(loginNotifier).socialMediaLinks == null) {
+                    await ref
+                        .read(loginNotifier.notifier)
+                        .getCategoriesAndSocialMediaLinksOfInfluencer(
+                          NewSession.get(PrefKeys.id, 0),
+                        );
+                  }
                 }
               }
-              }
             },
-          )
-          ,
+          ),
         ),
         body: TabBarView(
           children: [
             //home
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: userTypeToCheck == "client"
+                  ? ClientHome()
+                  : InfluencersHome(),
+            ),
 
-     Padding(
-
-
-              padding: const  EdgeInsets.symmetric(horizontal: 20),
-              child:
-
-
-       userTypeToCheck == "client"?
-       ClientHome():
-     InfluencersHome()
-
-         ),
             //profile
-
-
-
-              HandelProfileAndLoginUI()
-
+            HandelProfileAndLoginUI(),
           ],
         ),
       ),
@@ -119,15 +107,12 @@ class _HandelProfileAndLoginUIState
     extends ConsumerState<HandelProfileAndLoginUI> {
   @override
   Widget build(BuildContext context) {
-    return
-      ref.watch(loginNotifier).isLoading ||
-      ref.watch(logoutNotifier).isLoading ?
-      Center(child: CircularProgressIndicator(),)
-          :
-      (NewSession.get(PrefKeys.logged, "") == "OK" ?
-    ProfileUi()
-        :
-    LoginUi());
+    return ref.watch(loginNotifier).isLoading ||
+            ref.watch(logoutNotifier).isLoading
+        ? Center(child: CircularProgressIndicator())
+        : (NewSession.get(PrefKeys.logged, "") == "OK"
+              ? ProfileUi()
+              : LoginUi());
   }
 }
 
@@ -136,7 +121,6 @@ class ClientHome extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
@@ -149,9 +133,7 @@ class ClientHome extends ConsumerWidget {
           CustomButtonWidget(
             colorButton: AppColors.premrayColor,
             onPressd: () {
-
-
-             // debugPrint("categorySelectedId ")
+              // debugPrint("categorySelectedId ")
               context.pushNamed(AppRoutes.listOfInfluencers);
             },
             textButton: 'قائمة المؤثرين',
@@ -164,7 +146,6 @@ class ClientHome extends ConsumerWidget {
           CustomButtonWidget(
             colorButton: AppColors.premrayColor,
             onPressd: () {
-
               context.pushNamed(AppRoutes.listOfInfluencersByNiche);
             },
             textButton: 'قائمة المؤثرين حسب المجال',
@@ -187,17 +168,21 @@ class ClientHome extends ConsumerWidget {
           ),
           SizedBox(height: height * 0.015),
           CustomButtonWidget(
-              colorButton: AppColors.premrayColor,
+            colorButton: AppColors.premrayColor,
             onPressd: () {
-if(NewSession.get(PrefKeys.logged, "") == ""){
-  ref.read(showSnackBarNotifier.notifier).showNormalSnackBar(context:
-  context,message: "يرجى تسحيل الدخول أولا");
-  return;
-}
-context.pushNamed(AppRoutes.listOfPromotions);
-                debugPrint("here is life of promation of cliet!!!");
+              if (NewSession.get(PrefKeys.logged, "") == "") {
+                ref
+                    .read(showSnackBarNotifier.notifier)
+                    .showNormalSnackBar(
+                      context: context,
+                      message: "يرجى تسحيل الدخول أولا",
+                    );
+                return;
+              }
+              context.pushNamed(AppRoutes.listOfPromotions);
+              debugPrint("here is life of promation of cliet!!!");
 
-                debugPrint("listOfClientPromotions");
+              debugPrint("listOfClientPromotions");
             },
             textButton: 'اشهاراتي',
             textStyle: AppTextStyle.homebuttonStyle,
@@ -218,18 +203,18 @@ context.pushNamed(AppRoutes.listOfPromotions);
             width: width * 0.9,
             radius: 180,
           ),
-          SizedBox(height: height * 0.015),
-          CustomButtonWidget(
-            colorButton: AppColors.premrayColor,
-            onPressd: () {
+          // SizedBox(height: height * 0.015),
+          // CustomButtonWidget(
+          //   colorButton: AppColors.premrayColor,
+          //   onPressd: () {
 
-            },
-            textButton: 'خدمات المنصة الاحترافية',
-            textStyle: AppTextStyle.homebuttonStyle,
-            heigth: height * 0.07,
-            width: width * 0.9,
-            radius: 180,
-          ),
+          //   },
+          //   textButton: 'خدمات المنصة الاحترافية',
+          //   textStyle: AppTextStyle.homebuttonStyle,
+          //   heigth: height * 0.07,
+          //   width: width * 0.9,
+          //   radius: 180,
+          // ),
           SizedBox(height: height * 0.015),
           CustomButtonWidget(
             colorButton: AppColors.premrayColor,
@@ -244,11 +229,8 @@ context.pushNamed(AppRoutes.listOfPromotions);
             radius: 180,
           ),
           SizedBox(height: height * 0.015),
-
         ],
       ),
     );
   }
-
-
 }

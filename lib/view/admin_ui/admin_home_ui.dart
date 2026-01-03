@@ -37,14 +37,6 @@ class AdminHomeScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.admin_panel_settings,
-              size: 100,
-              color: AppColors.premrayColor,
-            ),
-            const SizedBox(height: 20),
-            Text('أهلاً بك في لوحة تحكم المنصة', style: AppTextStyle.black19),
-            const SizedBox(height: 40),
             ElevatedButton.icon(
               onPressed: () => context.push(AppRoutes.reportManagement),
               icon: const Icon(Icons.report_problem, color: Colors.white),
@@ -69,6 +61,25 @@ class AdminHomeScreen extends ConsumerWidget {
               icon: const Icon(Icons.people, color: Colors.white),
               label: const Text(
                 'إدارة الحسابات',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.premrayColor,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: () => context.push(AppRoutes.promotionsManagement),
+              icon: const Icon(Icons.campaign, color: Colors.white),
+              label: const Text(
+                'إدارة الحملات الإعلانية',
                 style: TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(

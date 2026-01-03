@@ -5,9 +5,7 @@
             "name": "dz_pub (No Impeller)",
             "request": "launch",
             "type": "dart",
-            "args": [
-                "--no-impeller"
-            ]
+         
         }
     ]
 }

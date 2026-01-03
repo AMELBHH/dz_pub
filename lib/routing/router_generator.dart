@@ -1,3 +1,5 @@
+import 'package:dz_pub/api/promations_models/promotions.dart';
+import 'package:dz_pub/api/users.dart';
 import 'package:dz_pub/client/questions/last_step.dart';
 
 import 'package:dz_pub/client/questions/custom_dropdown_question.dart';
@@ -25,6 +27,8 @@ import 'package:dz_pub/view/admin_ui/report_management_ui.dart';
 import 'package:dz_pub/view/admin_ui/admin_home_ui.dart';
 import 'package:dz_pub/view/admin_ui/account_management/account_list_ui.dart';
 import 'package:dz_pub/view/admin_ui/account_management/user_details_ui.dart';
+import 'package:dz_pub/view/admin_ui/promotions_management_ui.dart';
+import 'package:dz_pub/view/authorization_ui/update_profile_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -128,7 +132,10 @@ class RouterGenrator {
       GoRoute(
         name: AppRoutes.promotionDetails,
         path: AppRoutes.promotionDetails,
-        builder: (context, state) => const PromotionDetailsScreen(),
+        builder: (context, state) {
+          final promotion = state.extra as Promotion?;
+          return PromotionDetailsScreen(promotion: promotion);
+        },
       ),
       GoRoute(
         name: AppRoutes.listOfPromotions,
@@ -159,9 +166,18 @@ class RouterGenrator {
         path: AppRoutes.userDetails,
         name: AppRoutes.userDetails,
         builder: (context, state) {
-          final userId = state.extra as int;
-          return UserDetailsScreen(userId: userId);
+          return UserDetailsScreen();
         },
+      ),
+      GoRoute(
+        path: AppRoutes.promotionsManagement,
+        name: AppRoutes.promotionsManagement,
+        builder: (context, state) => const PromotionsManagementScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.updateProfile,
+        name: AppRoutes.updateProfile,
+        builder: (context, state) => const UpdateProfileUi(),
       ),
     ],
   );

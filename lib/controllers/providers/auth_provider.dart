@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:dz_pub/controllers/methods/api_methods/check_verification_notifier.dart';
 import 'package:dz_pub/controllers/methods/api_methods/get_user_type_notifier.dart';
 import 'package:dz_pub/controllers/methods/api_methods/refresh_user_data_notifier.dart';
 import 'package:dz_pub/controllers/methods/api_methods/register_notifier.dart';
+import 'package:dz_pub/controllers/methods/api_methods/update_profile_notifier.dart';
 import 'package:dz_pub/controllers/methods/hybrid_methods/drop_down_notifier.dart';
 import 'package:dz_pub/controllers/statuses/auth_state.dart';
 import 'package:dz_pub/controllers/statuses/validate_text_form_field_state.dart';
@@ -18,9 +20,9 @@ import '../methods/local_methods/logout_notifier.dart';
 
 // import '../../../controller/provider_controllers/local_methods/switcher_theme_mode.dart';
 
-
 final registerNotifier = StateNotifierProvider<RegisterNotifier, AuthState>(
-    (ref) => RegisterNotifier());
+  (ref) => RegisterNotifier(),
+);
 
 final loginNotifier = StateNotifierProvider<LoginNotifier, AuthState>((ref) {
   return LoginNotifier();
@@ -41,45 +43,55 @@ final logoutNotifier = StateNotifierProvider<LogoutNotifier, AuthState>((ref) {
 final userObjectProvider = StateProvider<User?>((ref) => null);
 final formFieldsNotifier =
     StateNotifierProvider<FormFieldsNotifier, Map<String, TextFieldState>>(
-        (ref) => FormFieldsNotifier());
-
-
+      (ref) => FormFieldsNotifier(),
+    );
 
 final refreshUserDataNotifier =
     StateNotifierProvider<RefreshUserDataNotifier, AuthState>(
-        (ref) => RefreshUserDataNotifier());
+      (ref) => RefreshUserDataNotifier(),
+    );
 
+final getUserTypeNotifier =
+    StateNotifierProvider<GetUserTypeNotifier, AuthState>(
+      (ref) => GetUserTypeNotifier(),
+    );
 
- final getUserTypeNotifier = StateNotifierProvider<GetUserTypeNotifier, AuthState>(
-    (ref) => GetUserTypeNotifier());
+final updateProfileNotifier =
+    StateNotifierProvider<UpdateProfileNotifier, AuthState>(
+      (ref) => UpdateProfileNotifier(),
+    );
 
-
+final checkVerificationNotifier =
+    StateNotifierProvider<CheckVerificationNotifier, AuthState>(
+      (ref) => CheckVerificationNotifier(),
+    );
 
 final dropdownProvider = StateNotifierProvider<DropdownNotifier, int>((ref) {
   return DropdownNotifier();
 });
 
-
-  final emailLoginController = StateProvider<TextEditingController>((ref) {
-    final controller = TextEditingController();
-    ref.onDispose(
-        () => controller.dispose()); // Dispose when the provider is disposed
-    return controller;
-  });
-
+final emailLoginController = StateProvider<TextEditingController>((ref) {
+  final controller = TextEditingController();
+  ref.onDispose(
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
+  return controller;
+});
 
 final otpCodeController = StateProvider<TextEditingController>((ref) {
   //Reg => registration
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
 
 final passwordLoginController = StateProvider<TextEditingController>((ref) {
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
 /*
@@ -140,7 +152,9 @@ final branchAddressController = StateProvider<TextEditingController>((ref) {
   return c;
 });
 
-final institutionAddressController = StateProvider<TextEditingController>((ref) {
+final institutionAddressController = StateProvider<TextEditingController>((
+  ref,
+) {
   final c = TextEditingController();
   ref.onDispose(() => c.dispose());
   return c;
@@ -169,69 +183,74 @@ final ibanController = StateProvider<TextEditingController>((ref) {
   return c;
 });
 
-
-
 // For select or dropdowns (NOT text)
 
 // For arrays
-  final categoryIdsProvider = StateProvider<List<int>>((ref) => []);
-  final socialMediaIdsProvider = StateProvider<List<int>>((ref) => []);
-  final socialMediaLinksProvider = StateProvider<List<String>>((ref) => []);
+final categoryIdsProvider = StateProvider<List<int>>((ref) => []);
+final socialMediaIdsProvider = StateProvider<List<int>>((ref) => []);
+final socialMediaLinksProvider = StateProvider<List<String>>((ref) => []);
 
 final passwordRegController = StateProvider<TextEditingController>((ref) {
   //Reg => registration
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
 final newPasswordController = StateProvider<TextEditingController>((ref) {
   //Reg => registration
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
 final sureNewPasswordController = StateProvider<TextEditingController>((ref) {
   //Reg => registration
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
 final oldPasswordController = StateProvider<TextEditingController>((ref) {
   //Reg => registration
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
 final updateUsernameController = StateProvider<TextEditingController>((ref) {
   //Reg => registration
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
 final updatePhoneNumberController = StateProvider<TextEditingController>((ref) {
   //Reg => registration
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
-final streamUpdateUserDataController = StateProvider<StreamController<String>>(
-  (ref) {
-    final controller = StreamController<String>.broadcast();
-    ref.onDispose(() => controller.close());
-    return controller;
-  },
-);
+final streamUpdateUserDataController = StateProvider<StreamController<String>>((
+  ref,
+) {
+  final controller = StreamController<String>.broadcast();
+  ref.onDispose(() => controller.close());
+  return controller;
+});
 final whatsappController = StateProvider<TextEditingController>((ref) {
   //Reg => registration
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
 
@@ -239,7 +258,8 @@ final facebookController = StateProvider<TextEditingController>((ref) {
   //Reg => registration
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
 
@@ -247,20 +267,23 @@ final emailController = StateProvider<TextEditingController>((ref) {
   //Reg => registration
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
 
 final userNameController = StateProvider<TextEditingController>((ref) {
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
 final sendNoticeForUcController = StateProvider<TextEditingController>((ref) {
   final controller = TextEditingController();
   ref.onDispose(
-      () => controller.dispose()); // Dispose when the provider is disposed
+    () => controller.dispose(),
+  ); // Dispose when the provider is disposed
   return controller;
 });
 
@@ -283,15 +306,18 @@ final email = StateProvider<String>((ref) => "");
 final facebook = StateProvider<String>((ref) => "");
 final phone = StateProvider<String>((ref) => "");
 final whatsapp = StateProvider<String>((ref) => "");
-final   isHaveCrProvider     = StateProvider<String>((ref) => "no");
-final defaultImage = StateProvider<String>((ref) => ""
-    "https://media.licdn.com/dms/image/v2/C4E12AQHzBA"
-    "iANK2ceQ/article-cover_image-shrink_720_1280/article-cover_image-shrink"
-    "_720_1280/0/1627292304016?e=2147483647&v=beta&t=CaGaKBl8DcF2tV6Ygjhe"
-    "9uOPJdAc25Gis-KnOGC8G9E");
-    final selectedCountryCode = StateProvider<String>((ref) => "+970");
+final isHaveCrProvider = StateProvider<String>((ref) => "no");
+final defaultImage = StateProvider<String>(
+  (ref) =>
+      ""
+      "https://media.licdn.com/dms/image/v2/C4E12AQHzBA"
+      "iANK2ceQ/article-cover_image-shrink_720_1280/article-cover_image-shrink"
+      "_720_1280/0/1627292304016?e=2147483647&v=beta&t=CaGaKBl8DcF2tV6Ygjhe"
+      "9uOPJdAc25Gis-KnOGC8G9E",
+);
+final selectedCountryCode = StateProvider<String>((ref) => "+970");
 final tokenOfUser = StateProvider<String>((ref) => "");
-    final typeOfInfluencerProvider = StateProvider<String>((ref) => "");
+final typeOfInfluencerProvider = StateProvider<String>((ref) => "");
 
 /// those string value is the errors that show in TextFormField widget
 final updateUserNameValidate = StateProvider<String?>((ref) => null);
@@ -299,15 +325,11 @@ final oldPasswordValidate = StateProvider<String?>((ref) => null);
 final newPasswordValidate = StateProvider<String?>((ref) => null);
 final sureNewPasswordValidate = StateProvider<String?>((ref) => null);
 final updatePhoneValidate = StateProvider<String?>((ref) => null);
-final countriesCodes = StateProvider<List<String>>((ref) => [
-  "+970",
-  "+972",    ]);
-final typeOfUser = StateProvider<List<String>>((ref) => [
-  "مالك",
-  "مكتب عقاري",
-    ]);
-final categoriesOfInfluencer = StateProvider<Future<List<Category?>?>>((ref)
-=> Future.value([]));
+final countriesCodes = StateProvider<List<String>>((ref) => ["+970", "+972"]);
+final typeOfUser = StateProvider<List<String>>((ref) => ["مالك", "مكتب عقاري"]);
+final categoriesOfInfluencer = StateProvider<Future<List<Category?>?>>(
+  (ref) => Future.value([]),
+);
 
 final errorStatusCode = StateProvider<int>((ref) => 0);
 final ownerIdNotifier = StateProvider<int>((ref) => 0);
@@ -335,4 +357,3 @@ final updatePhoneNumberFormKey = GlobalKey<FormState>();
 final oldPasswordFormKey = GlobalKey<FormState>();
 final newPasswordFormKey = GlobalKey<FormState>();
 final sureNewPasswordFormKey = GlobalKey<FormState>();
-

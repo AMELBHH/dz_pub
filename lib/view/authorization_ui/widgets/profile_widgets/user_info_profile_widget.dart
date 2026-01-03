@@ -13,12 +13,11 @@ class UserInfoWidget extends ConsumerWidget {
     final email = NewSession.get(PrefKeys.email, '');
     final phone = NewSession.get(PrefKeys.phone, '');
     final nickName = NewSession.get(PrefKeys.nickName, '');
-    final createdAt = NewSession.get(PrefKeys.createdAt, '');
     final isVerified = NewSession.get(PrefKeys.isVerified, 'no');
 
     final createdAtString = NewSession.get(PrefKeys.createdAt, '');
 
-// Check if the string is not empty
+    // Check if the string is not empty
     String formattedCreatedAt = '';
     if (createdAtString.isNotEmpty) {
       try {
@@ -42,59 +41,90 @@ class UserInfoWidget extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                name.isEmpty ? "مستخدم غير معروف" : name,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: [
+                  Text(
+                    name.isEmpty ? "مستخدم غير معروف" : name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                  if (isVerified == "1" || isVerified == "yes")
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4),
+                      child: Icon(Icons.verified, color: Colors.blue, size: 20),
+                    ),
+                ],
               ),
 
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: isVerified == "1" ? Colors.green : Colors.orange,
-                  borderRadius: BorderRadius.circular(6),
+              if (isVerified == "0" || isVerified == "no")
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.orange,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: const Text(
+                    "غير مُوَثَّق",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
                 ),
-                child: Text(
-                  isVerified == "yes" ? "مُوَثَّق" : "غير مُوَثَّق",
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
-                ),
-              ),
             ],
           ),
 
           const SizedBox(height: 10),
 
           // PHONE
-          Text(
-            "رقم الهاتف: $phone",
-            style: const TextStyle(fontSize: 14),
-          ),
+          if (phone.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5),
+              child: Text(
+                "رقم الهاتف: $phone",
+                style: const TextStyle(fontSize: 14, fontFamily: 'Cairo'),
+              ),
+            ),
 
           // EMAIL
-          Text(
-            "البريد الإلكتروني: $email",
-            style: const TextStyle(fontSize: 14),
-          ),    Text(
-            "اللقب: $nickName",
-            style: const TextStyle(fontSize: 14),
-          ),
-          //nickName
+          if (email.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5),
+              child: Text(
+                "البريد الإلكتروني: $email",
+                style: const TextStyle(fontSize: 14, fontFamily: 'Cairo'),
+              ),
+            ),
 
-
+          // NICKNAME
+          if (nickName.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5),
+              child: Text(
+                "اللقب: $nickName",
+                style: const TextStyle(fontSize: 14, fontFamily: 'Cairo'),
+              ),
+            ),
 
           const SizedBox(height: 10),
 
           // JOIN DATE
-          Text(
-            createdAt.isEmpty ? "تاريخ الانضمام: غير متوفر" : "تاريخ "
-                "الانضمام: $formattedCreatedAt",
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 13,
+          if (formattedCreatedAt.isNotEmpty)
+            Text(
+              "تاريخ الانضمام: $formattedCreatedAt",
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 13,
+                fontFamily: 'Cairo',
+              ),
             ),
-          ),
         ],
       ),
     );

@@ -74,19 +74,19 @@ class User {
   });
 
   User.fromJson(Map<String, dynamic> json, {this.token})
-    : id = json['id'],
-      name = json['name'],
-      email = json['email'],
-      typeId = json['type_id'],
-      isActive = json['is_active'],
-      createdAt = json['created_at'],
-      updatedAt = json['updated_at'],
+    : id = i(json['id']),
+      name = s(json['name']),
+      email = s(json['email']),
+      typeId = i(json['type_id']),
+      isActive = i(json['is_active']),
+      createdAt = s(json['created_at']),
+      updatedAt = s(json['updated_at']),
       userInfo = json['user_info'] != null
-          ? UserInfo?.fromJson(json['user_info'])
+          ? UserInfo.fromJson(json['user_info'])
           : null,
-      client = json['client'] != null ? Client?.fromJson(json['client']) : null,
+      client = json['client'] != null ? Client.fromJson(json['client']) : null,
       influencer = json['influencer'] != null
-          ? Influencer?.fromJson(json['influencer'])
+          ? Influencer.fromJson(json['influencer'])
           : null,
       reportsMade = json['reports_made'] != null
           ? (json['reports_made'] as List)
@@ -155,14 +155,14 @@ class UserInfo {
   });
 
   UserInfo.fromJson(Map<String, dynamic> json)
-    : id = json['id'],
-      phoneNumber = json['phone_number'],
-      identityNumber = json['identity_number'],
-      //  profileImage = json['profile_image'],
-      isVerified = json['is_verified'],
-      userId = json['user_id'],
-      createdAt = json['created_at'],
-      updatedAt = json['updated_at'];
+    : id = i(json['id']),
+      phoneNumber = s(json['phone_number']),
+      identityNumber = s(json['identity_number']),
+      //  profileImage = s(json['profile_image']),
+      isVerified = s(json['is_verified']),
+      userId = i(json['user_id']),
+      createdAt = s(json['created_at']),
+      updatedAt = s(json['updated_at']);
 
   Map<String, dynamic> toJson() => {
     "id": id,
@@ -182,7 +182,7 @@ class Client {
   String? createdAt;
   String? updatedAt;
 
-  UserMini? user; // <<-- added, non-destructive
+  UserMini? user;
   ClientWithCr? clientWithCr;
   ClientWithoutCr? clientWithoutCr;
 
@@ -197,15 +197,15 @@ class Client {
   });
 
   Client.fromJson(Map<String, dynamic> json)
-    : id = json['id'],
-      isHaveCr = json['is_have_cr'],
-      createdAt = json['created_at'],
-      updatedAt = json['updated_at'],
-      clientWithCr = json['client_with_cr'] != null
-          ? ClientWithCr.fromJson(json['client_with_cr'])
+    : id = i(json['id']),
+      isHaveCr = s(json['is_have_cr']),
+      createdAt = s(json['created_at']),
+      updatedAt = s(json['updated_at']),
+      clientWithCr = json['client_with_c_r'] != null
+          ? ClientWithCr.fromJson(json['client_with_c_r'])
           : null,
-      clientWithoutCr = json['client_without_cr'] != null
-          ? ClientWithoutCr.fromJson(json['client_without_cr'])
+      clientWithoutCr = json['client_without_c_r'] != null
+          ? ClientWithoutCr.fromJson(json['client_without_c_r'])
           : null,
       user = json['user'] != null ? UserMini.fromJson(json['user']) : null;
 
@@ -214,13 +214,14 @@ class Client {
     "is_have_cr": isHaveCr,
     "created_at": createdAt,
     "updated_at": updatedAt,
-    "client_with_cr": clientWithCr?.toJson(),
-    "client_without_cr": clientWithoutCr?.toJson(),
+    "client_with_c_r": clientWithCr?.toJson(),
+    "client_without_c_r": clientWithoutCr?.toJson(),
     "user": user?.toJson(),
   };
 }
 
 class ClientWithoutCr {
+  int? id;
   int? clientId;
   String? nickname;
   String? identityImage;
@@ -228,6 +229,7 @@ class ClientWithoutCr {
   String? updatedAt;
 
   ClientWithoutCr({
+    this.id,
     this.clientId,
     this.nickname,
     this.identityImage,
@@ -236,13 +238,15 @@ class ClientWithoutCr {
   });
 
   ClientWithoutCr.fromJson(Map<String, dynamic> json)
-    : clientId = json['client_id'],
-      nickname = json['nickname'],
-      identityImage = json['identity_image'],
-      createdAt = json['created_at'],
-      updatedAt = json['updated_at'];
+    : id = i(json['id']),
+      clientId = i(json['client_id']),
+      nickname = s(json['nickname']),
+      identityImage = s(json['identity_image']),
+      createdAt = s(json['created_at']),
+      updatedAt = s(json['updated_at']);
 
   Map<String, dynamic> toJson() => {
+    "id": id,
     "client_id": clientId,
     "nickname": nickname,
     "identity_image": identityImage,
@@ -262,6 +266,8 @@ class ClientWithCr {
   final String? nifNumber;
   final String? iban;
   final String? imageOfLicense;
+  final String? createdAt;
+  final String? updatedAt;
 
   ClientWithCr({
     this.clientId,
@@ -274,20 +280,24 @@ class ClientWithCr {
     this.nifNumber,
     this.iban,
     this.imageOfLicense,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory ClientWithCr.fromJson(Map<String, dynamic> json) {
     return ClientWithCr(
-      clientId: json['client_id'],
-      regOwnerName: json['reg_owner_name'],
-      institutionName: json['institution_name'],
-      branchAddress: json['branch_address'],
-      institutionAddress: json['institution_address'],
-      rcNumber: json['rc_number'],
-      nisNumber: json['nis_number'],
-      nifNumber: json['nif_number'],
-      iban: json['iban'],
-      imageOfLicense: json['image_of_license'],
+      clientId: i(json['client_id']),
+      regOwnerName: s(json['reg_owner_name']),
+      institutionName: s(json['institution_name']),
+      branchAddress: s(json['branch_address']),
+      institutionAddress: s(json['institution_address']),
+      rcNumber: s(json['rc_number']),
+      nisNumber: s(json['nis_number']),
+      nifNumber: s(json['nif_number']),
+      iban: s(json['iban']),
+      imageOfLicense: s(json['image_of_license']),
+      createdAt: s(json['created_at']),
+      updatedAt: s(json['updated_at']),
     );
   }
 
@@ -303,6 +313,8 @@ class ClientWithCr {
       'nif_number': nifNumber,
       'iban': iban,
       'image_of_license': imageOfLicense,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
     };
   }
 }
@@ -315,10 +327,10 @@ class Influencer {
   final String? shakeNumber;
   final int? typeId;
 
-  UserMini? user; // <<-- added, non-destructive
-
+  UserMini? user;
   final List<SocialMediaLink>? socialMediaLinks;
   final List<Category>? categories;
+  final TypeOfInfluencer? typeOfInfluencer;
 
   Influencer({
     this.rating,
@@ -330,6 +342,7 @@ class Influencer {
     this.user,
     this.socialMediaLinks = const [],
     this.categories = const [],
+    this.typeOfInfluencer,
   });
 
   factory Influencer.fromJson(Map<String, dynamic> json) {
@@ -342,20 +355,20 @@ class Influencer {
       dateOfBirth: json['date_of_birth'],
       shakeNumber: json['shake_number'],
       typeId: json['type_id'],
-
       user: json['user'] != null ? UserMini.fromJson(json['user']) : null,
-
       socialMediaLinks: json['social_media_links'] != null
           ? (json['social_media_links'] as List)
                 .map((e) => SocialMediaLink.fromJson(e))
                 .toList()
           : [],
-
       categories: json['categories'] != null
           ? (json['categories'] as List)
                 .map((e) => Category.fromJson(e))
                 .toList()
           : [],
+      typeOfInfluencer: json['type_of_influencer'] != null
+          ? TypeOfInfluencer.fromJson(json['type_of_influencer'])
+          : null,
     );
   }
 
@@ -370,8 +383,22 @@ class Influencer {
       'user': user?.toJson(),
       'social_media_links': socialMediaLinks?.map((e) => e.toJson()).toList(),
       'categories': categories?.map((e) => e.toJson()).toList(),
+      'type_of_influencer': typeOfInfluencer?.toJson(),
     };
   }
+}
+
+class TypeOfInfluencer {
+  final int? id;
+  final String? name;
+
+  TypeOfInfluencer({this.id, this.name});
+
+  factory TypeOfInfluencer.fromJson(Map<String, dynamic> json) {
+    return TypeOfInfluencer(id: json['id'], name: json['name']);
+  }
+
+  Map<String, dynamic> toJson() => {"id": id, "name": name};
 }
 
 class UserMini {

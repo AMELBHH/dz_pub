@@ -4,6 +4,7 @@ import 'package:dz_pub/core/styling/App_colors.dart';
 import 'package:dz_pub/core/styling/App_text_style.dart';
 import 'package:dz_pub/routing/App_routes.dart';
 import 'package:dz_pub/api/users.dart';
+import 'package:dz_pub/view/admin_ui/account_management/user_details_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -49,6 +50,10 @@ class _AccountListScreenState extends ConsumerState<AccountListScreen> {
                 ref.read(adminNotifierProvider.notifier).getUnverifiedUsers(1);
               } else if (value == 'unverified_influencer') {
                 ref.read(adminNotifierProvider.notifier).getUnverifiedUsers(2);
+              } else if (value == 'clients_only') {
+                ref.read(adminNotifierProvider.notifier).getUsersByType(1);
+              } else if (value == 'influencers_only') {
+                ref.read(adminNotifierProvider.notifier).getUsersByType(2);
               }
             },
             itemBuilder: (BuildContext context) => [
@@ -89,6 +94,28 @@ class _AccountListScreenState extends ConsumerState<AccountListScreen> {
                 value: 'unverified_influencer',
                 child: Text(
                   'مؤثرين غير موثقين',
+                  style: TextStyle(
+                    color: ref
+                        .read(themeModeNotifier.notifier)
+                        .textTheme(ref: ref),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: 'clients_only',
+                child: Text(
+                  'العملاء فقط',
+                  style: TextStyle(
+                    color: ref
+                        .read(themeModeNotifier.notifier)
+                        .textTheme(ref: ref),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: 'influencers_only',
+                child: Text(
+                  'المؤثرين فقط',
                   style: TextStyle(
                     color: ref
                         .read(themeModeNotifier.notifier)
@@ -137,12 +164,33 @@ class _AccountListScreenState extends ConsumerState<AccountListScreen> {
             style: TextStyle(color: AppColors.premrayColor),
           ),
         ),
-        title: Text(
-          user.name ?? 'بدون اسم',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: ref.read(themeModeNotifier.notifier).textTheme(ref: ref),
-          ),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                user.name ?? 'بدون اسم',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: ref
+                      .read(themeModeNotifier.notifier)
+                      .textTheme(ref: ref),
+                ),
+              ),
+            ),
+            if (user.typeId == 1 && user.client != null) ...[
+              const SizedBox(width: 8),
+              Text(
+                user.client!.isHaveCr == "yes"
+                    ? "لديه سجل تجاري"
+                    : "لا يملك سجل تجاري",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ],
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,7 +269,11 @@ class _AccountListScreenState extends ConsumerState<AccountListScreen> {
         ),
         onTap: () {
           if (user.id != null) {
-            context.pushNamed(AppRoutes.userDetails, extra: user.id);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => UserDetailsScreen(user: user),
+              ),
+            );
           }
         },
       ),

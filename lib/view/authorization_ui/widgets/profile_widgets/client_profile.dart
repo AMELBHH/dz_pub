@@ -20,6 +20,7 @@ class ClientProfile extends ConsumerWidget {
     );
   }
 }
+
 class ClientWithCr extends ConsumerWidget {
   const ClientWithCr({super.key});
 
@@ -32,6 +33,7 @@ class ClientWithCr extends ConsumerWidget {
     final nif = NewSession.get(PrefKeys.nifNumber, '');
     final nis = NewSession.get(PrefKeys.nisNumber, '');
     final iban = NewSession.get(PrefKeys.iban, '');
+    final institutionAddress = NewSession.get(PrefKeys.institutionAddress, '');
     final licenseImage = NewSession.get(PrefKeys.imageOfLicense, '');
 
     return Directionality(
@@ -44,9 +46,26 @@ class ClientWithCr extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const TitleText("معلومات الشركة"),
-                Text("اسم المالك: $ownerName"),
-                Text("اسم المؤسسة: $institution"),
-                Text("عنوان الفرع: $branchAddress"),
+                if (ownerName.isNotEmpty)
+                  Text(
+                    "اسم المالك: $ownerName",
+                    style: const TextStyle(fontFamily: 'Cairo'),
+                  ),
+                if (institution.isNotEmpty)
+                  Text(
+                    "اسم المؤسسة: $institution",
+                    style: const TextStyle(fontFamily: 'Cairo'),
+                  ),
+                if (institutionAddress.isNotEmpty)
+                  Text(
+                    "عنوان المؤسسة: $institutionAddress",
+                    style: const TextStyle(fontFamily: 'Cairo'),
+                  ),
+                if (branchAddress.isNotEmpty)
+                  Text(
+                    "عنوان الفرع: $branchAddress",
+                    style: const TextStyle(fontFamily: 'Cairo'),
+                  ),
               ],
             ),
           ),
@@ -58,10 +77,26 @@ class ClientWithCr extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const TitleText("بيانات السجل التجاري"),
-                Text("رقم السجل التجاري (RC): $rc"),
-                Text("الرقم الجبائي (NIF): $nif"),
-                Text("رقم الضمان الاجتماعي (NIS): $nis"),
-                Text("رقم الحساب البنكي (IBAN): $iban"),
+                if (rc.isNotEmpty)
+                  Text(
+                    "رقم السجل التجاري (RC): $rc",
+                    style: const TextStyle(fontFamily: 'Cairo'),
+                  ),
+                if (nif.isNotEmpty)
+                  Text(
+                    "الرقم الجبائي (NIF): $nif",
+                    style: const TextStyle(fontFamily: 'Cairo'),
+                  ),
+                if (nis.isNotEmpty)
+                  Text(
+                    "الرقم الإحصائي (NIS): $nis",
+                    style: const TextStyle(fontFamily: 'Cairo'),
+                  ),
+                if (iban.isNotEmpty)
+                  Text(
+                    "رقم الحساب البنكي (IBAN): $iban",
+                    style: const TextStyle(fontFamily: 'Cairo'),
+                  ),
               ],
             ),
           ),
@@ -74,7 +109,10 @@ class ClientWithCr extends ConsumerWidget {
               children: [
                 const TitleText("صورة السجل التجاري"),
                 licenseImage.isEmpty
-                    ? const Text("لا توجد صورة مرفوعة")
+                    ? const Text(
+                        "لا توجد صورة مرفوعة",
+                        style: TextStyle(fontFamily: 'Cairo'),
+                      )
                     : Image.network(licenseImage, height: 120),
               ],
             ),
@@ -84,6 +122,7 @@ class ClientWithCr extends ConsumerWidget {
     );
   }
 }
+
 class ClientWithoutCr extends ConsumerWidget {
   const ClientWithoutCr({super.key});
 
@@ -101,10 +140,26 @@ class ClientWithoutCr extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const TitleText("المعلومات الشخصية"),
-            Text("الاسم الكامل: $fullName"),
-            Text("رقم الهوية: $identityNumber"),
-            Text("الجنس: $gender"),
-            Text("تاريخ الميلاد: $birthday"),
+            if (fullName.isNotEmpty)
+              Text(
+                "الاسم الكامل: $fullName",
+                style: const TextStyle(fontFamily: 'Cairo'),
+              ),
+            if (identityNumber.isNotEmpty)
+              Text(
+                "رقم الهوية: $identityNumber",
+                style: const TextStyle(fontFamily: 'Cairo'),
+              ),
+            if (gender.isNotEmpty)
+              Text(
+                "الجنس: $gender",
+                style: const TextStyle(fontFamily: 'Cairo'),
+              ),
+            if (birthday.isNotEmpty)
+              Text(
+                "تاريخ الميلاد: $birthday",
+                style: const TextStyle(fontFamily: 'Cairo'),
+              ),
           ],
         ),
       ),

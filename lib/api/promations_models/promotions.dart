@@ -4,6 +4,7 @@ import 'package:dz_pub/api/promations_models/social_media_type.dart';
 import 'package:dz_pub/api/promations_models/topic_already_ready.dart';
 import 'package:dz_pub/api/promations_models/topic_from_influencer.dart';
 import 'package:dz_pub/api/promations_models/type_of_promotion.dart';
+import 'package:dz_pub/api/users.dart';
 
 import 'movement.dart';
 
@@ -11,10 +12,7 @@ class PromotionResponse {
   final bool status;
   final Promotion promotion;
 
-  PromotionResponse({
-    required this.status,
-    required this.promotion,
-  });
+  PromotionResponse({required this.status, required this.promotion});
 
   factory PromotionResponse.fromJson(Map<String, dynamic> json) {
     return PromotionResponse(
@@ -29,17 +27,18 @@ class Promotion {
   final int? clientId;
   final int? influencerId;
   final String? requirements;
-  final int ?statusId;
-  final double?price;
-  final String?timeLine;
-  final String?shouldInfluencerMovement;
-  final String?createdAt;
-  final String?updatedAt;
+  final int? statusId;
+  final double? price;
+  final String? timeLine;
+  final String? shouldInfluencerMovement;
+  final String? createdAt;
+  final String? updatedAt;
+  final Influencer? influencer;
 
   // LISTS
   final List<_SocialMedia>? socialMedia;
-  final List<SocialMediaType> ?socialMediaTypes;
-  final List<TypeOfPromotion> ?typeOfPromotions;
+  final List<SocialMediaType>? socialMediaTypes;
+  final List<TypeOfPromotion>? typeOfPromotions;
 
   // CONDITIONAL FIELDS
   final Movement? movement;
@@ -51,24 +50,25 @@ class Promotion {
   final List<TopicAlreadyReady>? topicAlreadyReadies;
 
   Promotion({
-     this.id,
-     this.clientId,
-     this.influencerId,
-     this.requirements,
-     this.statusId,
-     this.price,
-     this.timeLine,
-     this.shouldInfluencerMovement,
-     this.createdAt,
-     this.updatedAt,
-     this.socialMedia,
-     this.socialMediaTypes,
-     this.typeOfPromotions,
+    this.id,
+    this.clientId,
+    this.influencerId,
+    this.requirements,
+    this.statusId,
+    this.price,
+    this.timeLine,
+    this.shouldInfluencerMovement,
+    this.createdAt,
+    this.updatedAt,
+    this.socialMedia,
+    this.socialMediaTypes,
+    this.typeOfPromotions,
     this.movement,
     this.registration,
     this.recommendations,
     this.topicFromInfluancers,
     this.topicAlreadyReadies,
+    this.influencer,
   });
 
   factory Promotion.fromJson(Map<String, dynamic> json) {
@@ -85,20 +85,20 @@ class Promotion {
       updatedAt: json['updated_at'],
       socialMedia: json['social_media'] != null
           ? (json['social_media'] as List)
-          .map((e) => _SocialMedia.fromJson(e))
-          .toList()
+                .map((e) => _SocialMedia.fromJson(e))
+                .toList()
           : [],
 
       socialMediaTypes: json['social_media_types'] != null
           ? (json['social_media_types'] as List)
-          .map((e) => SocialMediaType.fromJson(e))
-          .toList()
+                .map((e) => SocialMediaType.fromJson(e))
+                .toList()
           : [],
 
       typeOfPromotions: json['type_of_promations'] != null
           ? (json['type_of_promations'] as List)
-          .map((e) => TypeOfPromotion.fromJson(e))
-          .toList()
+                .map((e) => TypeOfPromotion.fromJson(e))
+                .toList()
           : [],
 
       movement: json['movement'] != null
@@ -111,34 +111,34 @@ class Promotion {
 
       recommendations: json['recommendations'] != null
           ? (json['recommendations'] as List)
-          .map((e) => Recommendation.fromJson(e))
-          .toList()
+                .map((e) => Recommendation.fromJson(e))
+                .toList()
           : [],
 
       topicFromInfluancers: json['topic_from_influancers'] != null
           ? (json['topic_from_influancers'] as List)
-          .map((e) => TopicFromInfluencer.fromJson(e))
-          .toList()
+                .map((e) => TopicFromInfluencer.fromJson(e))
+                .toList()
           : [],
 
       topicAlreadyReadies: json['topic_already_readies'] != null
           ? (json['topic_already_readies'] as List)
-          .map((e) => TopicAlreadyReady.fromJson(e))
-          .toList()
+                .map((e) => TopicAlreadyReady.fromJson(e))
+                .toList()
           : [],
- );
+      influencer: json['influencer'] != null
+          ? Influencer.fromJson(json['influencer'])
+          : null,
+    );
   }
 }
-class _SocialMedia {
-  final int id;
-  final int promationId;
-  final int socialMediaId;
 
-  _SocialMedia({
-    required this.id,
-    required this.promationId,
-    required this.socialMediaId,
-  });
+class _SocialMedia {
+  final int? id;
+  final int? promationId;
+  final int? socialMediaId;
+
+  _SocialMedia({this.id, this.promationId, this.socialMediaId});
 
   factory _SocialMedia.fromJson(Map<String, dynamic> json) {
     return _SocialMedia(
