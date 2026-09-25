@@ -17,6 +17,132 @@ import '../../statuses/auth_state.dart';
 
 class LoginNotifier extends StateNotifier<AuthState> {
   LoginNotifier() : super(AuthState());
+
+  static const Map<String, Map<String, String>> _demoAccounts = {
+    "client@demo.com": {"password": "123456", "type": "client"},
+    "influencer@demo.com": {"password": "123456", "type": "influencer"},
+  };
+
+  Map<String, dynamic> _buildDemoResponse(String type) {
+    if (type == "client") {
+      return {
+        "status": true,
+        "msg": "تم تسجيل الدخول بنجاح",
+        "data": {
+          "token": "demo-token-client-000",
+          "user": {
+            "id": 9001,
+            "name": "شركة الإعلانات الجزائرية",
+            "email": "client@demo.com",
+            "type_id": 1,
+            "is_active": 1,
+            "created_at": "2025-01-01T00:00:00.000000Z",
+            "updated_at": "2025-01-01T00:00:00.000000Z",
+            "user_info": {
+              "id": 1,
+              "phone_number": "0555123456",
+              "identity_number": "123456789",
+              "is_verified": "yes",
+              "user_id": 9001,
+              "created_at": "2025-01-01T00:00:00.000000Z",
+              "updated_at": "2025-01-01T00:00:00.000000Z",
+            },
+            "client": {
+              "id": 1,
+              "is_have_cr": "yes",
+              "created_at": "2025-01-01T00:00:00.000000Z",
+              "updated_at": "2025-01-01T00:00:00.000000Z",
+              "client_with_c_r": {
+                "client_id": 1,
+                "reg_owner_name": "أحمد بن علي",
+                "institution_name": "شركة الإعلانات الجزائرية",
+                "branch_address": "مغنية، تلمسان",
+                "institution_address": "الجزائر العاصمة",
+                "rc_number": "16/00-1234567B21",
+                "nis_number": "123456789012345",
+                "nif_number": "001234567891234",
+                "iban": "DZ5800100000000000000000",
+                "image_of_license": null,
+                "created_at": "2025-01-01T00:00:00.000000Z",
+                "updated_at": "2025-01-01T00:00:00.000000Z",
+              },
+              "client_without_c_r": null,
+              "user": {
+                "id": 9001,
+                "name": "شركة الإعلانات الجزائرية",
+                "email": "client@demo.com",
+                "type_id": 1,
+                "is_active": 1,
+              },
+            },
+            "influencer": null,
+          },
+        },
+      };
+    } else {
+      return {
+        "status": true,
+        "msg": "تم تسجيل الدخول بنجاح",
+        "data": {
+          "token": "demo-token-influencer-000",
+          "user": {
+            "id": 9002,
+            "name": "ياسمين مشهورة",
+            "email": "influencer@demo.com",
+            "type_id": 2,
+            "is_active": 1,
+            "created_at": "2025-01-01T00:00:00.000000Z",
+            "updated_at": "2025-01-01T00:00:00.000000Z",
+            "user_info": {
+              "id": 2,
+              "phone_number": "0666987654",
+              "identity_number": "987654321",
+              "is_verified": "yes",
+              "user_id": 9002,
+              "created_at": "2025-01-01T00:00:00.000000Z",
+              "updated_at": "2025-01-01T00:00:00.000000Z",
+            },
+            "client": null,
+            "influencer": {
+              "rating": 4.8,
+              "bio": "صانعة محتوى فمجال الموضة والجمال، +200 ألف متابع",
+              "gender": "female",
+              "date_of_birth": "1998-05-12",
+              "shake_number": "0666987654",
+              "type_id": 1,
+              "user": {
+                "id": 9002,
+                "name": "ياسمين مشهورة",
+                "email": "influencer@demo.com",
+                "type_id": 2,
+                "is_active": 1,
+              },
+              "social_media_links": [
+                {"id": 1, "platform": "Instagram", "url": "https://instagram.com/demo"},
+                {"id": 2, "platform": "TikTok", "url": "https://tiktok.com/demo"},
+              ],
+              "categories": [
+                {
+                  "id": 1,
+                  "name": "موضة",
+                  "created_at": "2025-01-01T00:00:00.000000Z",
+                  "updated_at": "2025-01-01T00:00:00.000000Z",
+                },
+                {
+                  "id": 2,
+                  "name": "جمال",
+                  "created_at": "2025-01-01T00:00:00.000000Z",
+                  "updated_at": "2025-01-01T00:00:00.000000Z",
+                },
+              ],
+              "type_of_influencer": {"id": 1, "name": "مشهور"},
+            },
+          },
+        },
+      };
+    }
+  }
+
   Future<List<SocialMediaLink>> _getSocialMediaLinksOfInfluencer(
     int influencerId, {
     WidgetRef? ref,
@@ -80,6 +206,39 @@ class LoginNotifier extends StateNotifier<AuthState> {
     BuildContext context,
   ) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
+
+    // ========================================================================
+    // فحص الحسابات الثابتة (Demo) أولاً - بدون أي اتصال بالسيرفر
+    // ========================================================================
+    if (_demoAccounts.containsKey(email) &&
+        _demoAccounts[email]!['password'] == password) {
+      final type = _demoAccounts[email]!['type']!;
+      final res = _buildDemoResponse(type);
+
+      final data = res["data"];
+      final userJson = data["user"];
+      final token = data["token"];
+      final user = User.fromJson(userJson, token: token);
+
+      debugPrint("[DEMO] user :$user");
+      debugPrint("[DEMO] User id: ${user.id}");
+      debugPrint("[DEMO] Token: ${user.token}");
+      debugPrint("[DEMO] Type ID: ${user.typeId}");
+
+      saveUserInfo(res);
+      NewSession.save(PrefKeys.logged, "OK");
+
+      state = state.copyWith(
+        isLoading: false,
+        userType: user.typeId == 1 ? "client" : "influencer",
+      );
+
+      return user; // يوقف هنا - ما يكملش للكود الأصلي تحت
+    }
+    // ========================================================================
+    // نهاية فحص الحسابات الثابتة
+    // ========================================================================
+
     var url = Uri.parse(ServerLocalhostEm.userLogin);
     var response = await http.post(
       url,
